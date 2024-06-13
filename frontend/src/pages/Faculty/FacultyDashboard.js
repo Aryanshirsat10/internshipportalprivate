@@ -1,9 +1,12 @@
 import {React , useState,useEffect} from 'react'
 import Sidebar from '../../components/Sidebar'
 import FilterDropdown from '../../components/FilterDropdown';
+import { MdOutlineLocationOn } from "react-icons/md";
+import FacultySidebar from '../../components/FacultySidebar';
 import InternshipCard from '../../components/InternshipsCard';
-const StudentDashboard = () => {
-  
+import { useUser } from '../../UserContext';
+const FacultyDashboard = () => {
+  const {setUser} = useUser();
   const [existingData, setExistingData] = useState([]);
   const [filterCriteria, setFilterCriteria] = useState({
     title: '',
@@ -32,6 +35,11 @@ const StudentDashboard = () => {
 
     fetchExistingData();
   }, []);
+
+  useEffect(()=>{
+    const userData = 'Faculty';
+    setUser(userData);
+  },[])
   // const handleFilterChange = (field, value) => {
   //   setFilterCriteria({ ...filterCriteria, [field]: value });
   // };
@@ -44,7 +52,7 @@ const StudentDashboard = () => {
   return (
     <div className='flex w-full h-screen '>
       <div className='flex-col bg-red-50 p-5 w-[15%] '>
-        <Sidebar/>
+        <FacultySidebar/>
       </div>
       <div className='rounded-lg bg-slate-100 w-[85%] p-5'>
         <h1 className="flex flex-col text-3xl font-bold items-start">Welcome back</h1>
@@ -89,4 +97,4 @@ const StudentDashboard = () => {
   )
 }
 
-export default StudentDashboard
+export default FacultyDashboard

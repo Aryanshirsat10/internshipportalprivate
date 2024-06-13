@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const { Schema } = mongoose;
 
 const internshipSchema = new mongoose.Schema({
   title: {
@@ -46,6 +47,14 @@ const internshipSchema = new mongoose.Schema({
     enum: ['open', 'closed'],
     default: 'open'
   },
+  postedby: {
+    type: Schema.Types.ObjectId,
+    ref: 'faculties', 
+    required: true
+  },
+  studentsworking: {
+    type: [String]
+  }
 });
 
 const Internship = mongoose.model('Internship', internshipSchema);

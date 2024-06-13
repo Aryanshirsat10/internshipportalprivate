@@ -3,6 +3,8 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const dotenv = require('dotenv');
+const InternshipRoutes = require('./routes/InternshipRoutes');
+const Facultyroutes = require('./routes/facultyroutes');
 dotenv.config();
 
 const app = express();
@@ -25,14 +27,8 @@ mongoose.connect(uri, {
   console.error('Error connecting to MongoDB:', err);
 });
 
-//models
-const Internship = require("./models/Internship.js");
-const Students = require("./models/Students.js");
-const Faculty = require("./models/Faculty.js");
-
-module.exports ={
-    app,
-    Internship,
-    Students,
-    Faculty
-}
+app.use('/api',InternshipRoutes);
+app.use('/api',Facultyroutes);
+app.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`);
+  });
