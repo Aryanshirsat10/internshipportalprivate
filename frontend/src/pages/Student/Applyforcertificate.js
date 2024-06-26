@@ -1,10 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react'
+import Sidebar from '../../components/Sidebar'
+import Cookies from 'js-cookie'
 import InternshipCard from '../../components/InternshipsCard';
-import Sidebar from '../../components/Sidebar';
-import Cookies from 'js-cookie';
 import Topsidebar from '../../components/Topsidebar';
 
-// Skeleton loader component
 const SkeletonLoader = () => (
   <div className="animate-pulse flex space-x-4">
     <div className="rounded-lg bg-gray-300 h-40 w-80"></div> {/* Placeholder for image */}
@@ -21,13 +20,12 @@ const SkeletonLoader = () => (
   </div>
 );
 
-const MyInternship = () => {
+const Applyforcertificate = () => {
   const [internships, setInternships] = useState([]);
-  const [isLoading, setIsLoading] = useState(true); // Track loading state
-
+  const [isLoading, setIsLoading] = useState(true);
   const fetchInternships = async () => {
     try {
-      const response = await fetch('http://localhost:5000/api/student/myinternships', {
+      const response = await fetch('http://localhost:5000/api/student/applyforcertificate', {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -54,9 +52,8 @@ const MyInternship = () => {
   useEffect(() => {
     fetchInternships();
   }, []);
-
   return (
-    <div className='min-[990px]:flex w-screen h-screen'>
+    <div className='min-[990px]:flex w-full h-screen'>
       <div className='min-[990px]:flex min-[990px]:flex-col bg-red-50 p-5 w-[20%] hidden'>
         <Sidebar/>
       </div>
@@ -67,7 +64,7 @@ const MyInternship = () => {
       </div>
       </div>
       <div className='rounded-lg bg-slate-100 min-[990px]:w-[80%] p-5 overflow-y-auto h-full'>
-        <h1 className='text-xl font-bold'>Current Internships</h1>
+        <h1 className='text-xl font-bold mb-6'>Apply for Certificate</h1>
         {isLoading ? (
           // Display skeleton loader while loading
           <>
@@ -87,7 +84,7 @@ const MyInternship = () => {
         )}
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default MyInternship;
+export default Applyforcertificate

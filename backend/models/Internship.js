@@ -38,13 +38,13 @@ const internshipSchema = new mongoose.Schema({
   maxApplicants: {
     type: Number
   },
-  currentApplicants: {
-    type: Number,
-    default: 0
-  },
+  currentApplicants: [{
+    type: Schema.Types.ObjectId,
+    ref: 'Student'  // Assuming you have a Student schema
+  }],
   status: {
     type: String,
-    enum: ['open', 'closed'],
+    enum: ['open', 'closed','completed'],
     default: 'open'
   },
   postedby: {
@@ -52,9 +52,22 @@ const internshipSchema = new mongoose.Schema({
     ref: 'faculties', 
     required: true
   },
-  studentsworking: {
-    type: [String]
-  }
+  studentsworking: [{
+    studentId:{
+      type: Schema.Types.ObjectId,
+      ref: 'Student'  // Assuming you have a Student schema
+    },
+    status:{
+      type: String,
+      enum: ['complete', 'incomplete', 'withdraw'],
+    },
+    credits:{
+      type: Number,
+    },
+    noofhours:{
+      type: Number,
+    },
+  }]
 });
 
 const Internship = mongoose.model('Internship', internshipSchema);

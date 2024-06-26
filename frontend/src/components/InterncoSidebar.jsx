@@ -4,7 +4,7 @@ import { RiHome5Fill,RiHome5Line } from "react-icons/ri";
 import { IoDocuments,IoDocumentsOutline,IoSettings,IoSettingsOutline } from "react-icons/io5";
 import { MdExplore,MdOutlineExplore  } from "react-icons/md";
 import Cookies from "js-cookie"
-const FacultySidebar = () => {
+const InterncoSidebar = () => {
   const [activeLink, setActiveLink] = useState(0);
   const handleLinkClick = (index) => {
     setActiveLink(index);
@@ -31,24 +31,14 @@ const FacultySidebar = () => {
     <div className='flex flex-col w-full h-full gap-10 place-items-center'>
       <h3 className='text-xl font-semibold'>Internship Portal</h3>
       <div className='flex flex-col gap-6 text-justify font-semibold w-full'>
-        <NavLink to="/Faculty" className={`link hover:bg-red-300 w-full rounded-lg p-2 ${activeLink ? 'active' : ''}`} onClick={() => handleLinkClick(0)}>
+        <NavLink to="/InternshipCoordinator" className={`link hover:bg-red-300 w-full rounded-lg p-2 ${activeLink ? 'active' : ''}`} onClick={() => handleLinkClick(0)}>
           <button className='flex flex-row gap-2'>
           {activeLink ? <RiHome5Fill style={{fontSize: 22}}/> : <RiHome5Line style={{fontSize: 22}}/>}Dashboard
           </button>
         </NavLink>
-        <NavLink to="/Faculty/myinternships" className={`link hover:bg-red-300 w-full rounded-lg p-2 ${activeLink ? 'active' : ''}`} onClick={() => handleLinkClick(0)}>
+        <NavLink to="/InternshipCoordinator/applications" className={`link hover:bg-red-300 w-full rounded-lg p-2 ${activeLink ? 'active' : ''}`} onClick={() => handleLinkClick(0)}>
           <button className='flex flex-row gap-2'>
-          {activeLink ? <IoDocuments style={{fontSize: 22}}/> : <IoDocumentsOutline style={{fontSize: 22}}/>}Myinternships
-          </button>
-        </NavLink>
-        <NavLink to="/Faculty/explore" className={`link hover:bg-red-300 w-full rounded-lg p-2 ${activeLink ? 'active' : ''}`} onClick={() => handleLinkClick(0)}>
-          <button className='flex flex-row gap-2'>
-          {activeLink ? <MdExplore style={{fontSize: 22}}/> : <MdOutlineExplore style={{fontSize: 22}}/>}Explore
-          </button>
-        </NavLink>
-        <NavLink to="/Faculty/settings" className={`link hover:bg-red-300 w-full rounded-lg p-2 ${activeLink ? 'active' : ''}`} onClick={() => handleLinkClick(0)}>
-          <button className='flex flex-row gap-2'>
-          {activeLink ? <IoSettings style={{fontSize: 22}}/> : <IoSettingsOutline style={{fontSize: 22}}/>}Settings
+          {activeLink ? <IoDocuments style={{fontSize: 22}}/> : <IoDocumentsOutline style={{fontSize: 22}}/>}Applications
           </button>
         </NavLink>
       </div>
@@ -68,4 +58,4 @@ const FacultySidebar = () => {
   )
 }
 
-export default FacultySidebar
+export default InterncoSidebar

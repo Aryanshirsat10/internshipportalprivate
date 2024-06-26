@@ -13,24 +13,42 @@ const InternshipCard = ({internship})=>{
       day: 'numeric',
     });
     const handleOnClick = () => {
-      if (user == 'Student') {
+      if (user == 'student') {
         navigate('/Student/internship', { state: { internship } });
       } else if (user == 'Faculty') {
         navigate('/Faculty/internship', { state: { internship } });
       }
     }
+    const calculateDuration = (startDate, endDate) => {
+      const start = new Date(startDate);
+      const end = new Date(endDate);
+    
+      // Calculate the difference in years and months
+      const yearsDifference = end.getFullYear() - start.getFullYear();
+      const monthsDifference = end.getMonth() - start.getMonth();
+    
+      // Total duration in months
+      const totalMonths = yearsDifference * 12 + monthsDifference;
+    
+      // Return the duration string
+      return `${totalMonths} ${totalMonths === 1 ? 'month' : 'months'}`;
+    };
+  
+    const duration = calculateDuration(internship.startDate, internship.endDate);
     return (
       <div className="bg-white p-4 m-4 rounded-md shadow-lg flex flex-col gap-2 w-80 flex-wrap" onClick={handleOnClick}>
         <h2 className="text-2xl font-semibold">{internship.title}</h2>
         <span className='text-slate-500 font-semibold'>{internship.company}</span>
         <p className='text-md font-normal flex flex-row'><MdOutlineLocationOn style={{fontSize: 20}}/>{internship.location}</p>
-        <div className='flex flex-row gap-20'>
+        <div className="flex flex-row gap-20 items-center">
+        <div className='flex flex-col'>
           <span className='text-slate-400 font-medium'>Start Date</span>
-          <span className='text-slate-400 font-medium'>Duration</span>
-        </div>
-        <div className='flex flex-row gap-12'>
           <span className='text-slate-400 font-medium'>{formattedStartDate}</span>
-          <span className='text-slate-400 font-medium'></span>
+        </div>
+        <div className='flex flex-col'>
+          <span className='text-slate-400 font-medium'>Duration</span>
+          <span className='text-slate-400 font-medium'>{duration}</span>
+        </div>
         </div>
         {/* <p className="font-semibold">Skills Required:</p>
           <ul>

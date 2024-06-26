@@ -5,6 +5,7 @@ import { MdOutlineLocationOn } from "react-icons/md";
 import FacultySidebar from '../../components/FacultySidebar';
 import InternshipCard from '../../components/InternshipsCard';
 import { useUser } from '../../UserContext';
+import TopfacultySidebar from '../../components/TopfacultySidebar';
 const FacultyDashboard = () => {
   const {setUser} = useUser();
   const [existingData, setExistingData] = useState([]);
@@ -46,20 +47,26 @@ const FacultyDashboard = () => {
   
   const uniqueTitles = Array.from(new Set(existingData.map((internship) => internship.title)));
   const uniqueStartDates = Array.from(new Set(existingData.map((internship) => internship.startDate)));
-  const uniqueDurations = Array.from(new Set(existingData.map((internship) => internship.duration)));
+  // const uniqueDurations = Array.from(new Set(existingData.map((internship) => internship.duration)));
   const uniqueLocations = Array.from(new Set(existingData.map((internship) => internship.location)));
 
   return (
-    <div className='flex w-full h-screen '>
-      <div className='flex-col bg-red-50 p-5 w-[15%] '>
+    <div className='min-[990px]:flex w-full h-screen'>
+      <div className='min-[990px]:flex min-[990px]:flex-col bg-red-50 p-5 w-[20%] hidden'>
         <FacultySidebar/>
       </div>
-      <div className='rounded-lg bg-slate-100 w-[85%] p-5'>
+      <div className='flex flex-col bg-red-50 h-fit min-[990px]:p-5 p-2 min-[990px]:hidden items-center'>
+      <h3 className='text-xl font-semibold'>Internship Portal</h3>
+      <div className='overflow-x-scroll w-screen pt-5'>
+        <TopfacultySidebar/>
+      </div>
+      </div>
+      <div className='rounded-lg bg-slate-100 min-[990px]:w-[80%] p-5 overflow-y-auto h-full'>
         <h1 className="flex flex-col text-3xl font-bold items-start">Welcome back</h1>
         <div>
-        <div className='flex flex-row pt-5 lg:space-x-[70%]'>
+        <div className='flex flex-row pt-5 justify-between lg:w-[95%] w-[95%]'>
           <h2 className='text-xl font-semibold text-slate-600'>
-            "{filterCriteria != null  ? `${filterCriteria.title || filterCriteria.startDate || filterCriteria.duration || filterCriteria.location || "All"}` : "All"}" Internships
+            "{filterCriteria != null  ? `${filterCriteria.title || filterCriteria.startDate || filterCriteria.location || "All"}` : "All"}" Internships
           </h2>
           <div className='flex '>
               {/* Updated FilterDropdown with a button */}
@@ -68,7 +75,7 @@ const FacultyDashboard = () => {
                 options={{
                   title: uniqueTitles,
                   startDate: uniqueStartDates,
-                  duration: uniqueDurations,
+                  // duration: uniqueDurations,
                   location: uniqueLocations,
                 }}
                 onChange={(values) => setFilterCriteria(values)}
