@@ -18,6 +18,11 @@ import Signup from './pages/Signup';
 import Applyforcertificate from './pages/Student/Applyforcertificate';
 import InternshipCoordinatorDashboard from './pages/InternshipCoordinator/InternshipCoordinatorDashboard';
 import Applications from './pages/InternshipCoordinator/Applications';
+import ApplicationDetail from './pages/InternshipCoordinator/ApplicationDetail';
+import SuperAdminDasboard from './pages/SuperAdmin/SuperAdminDashboard';
+import Reports from './pages/InternshipCoordinator/Reports';
+import ManageUsers from './pages/SuperAdmin/ManageUsers';
+import SuperReports from './pages/SuperAdmin/SuperReport';
 function App() {
   // const [loggedIn, setLoggedIn] = useState(
   //   Cookies.get("sessionId") && Cookies.get("token") ? true : false
@@ -74,6 +79,12 @@ function App() {
           {/*Internship Coordinator routes*/}
           <Route path='/InternshipCoordinator' element={<InternshipCoordinatorDashboard/>}/>
           <Route path='/InternshipCoordinator/applications' element={<Applications/>}/>
+          <Route path='/InternshipCoordinator/applicationDetail' element={<ApplicationDetail/>}/>
+          <Route path='/InternshipCoordinator/reports' element={<Reports/>}/>
+          {/*Super admin routes*/}
+          <Route path='/SuperAdmin' element={<SuperAdminDasboard />}/>
+          <Route path='/SuperAdmin/manageUser' element={<ManageUsers />}/>
+          <Route path='/SuperAdmin/reports' element={<SuperReports />}/>
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
     </Router>

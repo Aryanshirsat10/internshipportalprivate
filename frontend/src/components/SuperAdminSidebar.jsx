@@ -3,17 +3,16 @@ import { NavLink } from 'react-router-dom';
 import { RiHome5Fill,RiHome5Line } from "react-icons/ri";
 import { IoDocuments,IoDocumentsOutline,IoSettings,IoSettingsOutline } from "react-icons/io5";
 import { MdExplore,MdOutlineExplore  } from "react-icons/md";
-import Cookies from "js-cookie";
-const TopInternCoSidebar = () => {
+import Cookies from "js-cookie"
+const SuperAdminSidebar = () => {
   const [activeLink, setActiveLink] = useState(0);
-
   const handleLinkClick = (index) => {
     setActiveLink(index);
   };
 
   async function logout() {
     const response = fetch(
-      `http://localhost:5000/api/students/logout`,
+      `http://localhost:5000/api/faculty/logout`,
       {
         method: "GET",
         headers: {
@@ -29,23 +28,31 @@ const TopInternCoSidebar = () => {
   }
 
   return (
-    <div className='flex flex-col w-full'>
-      <div className='flex flex-row gap-x-6 text-justify font-semibold overflow-y-hidden'>
-        <NavLink to="/InternshipCoordinator" className={`link hover:bg-red-300 w-full rounded-lg p-2 ${activeLink ? 'active' : ''}`} onClick={() => handleLinkClick(0)}>
-          <button className='flex flex-row gap-x-2'>
+    <div className='flex flex-col w-full h-full gap-10 place-items-center'>
+      <h3 className='text-xl font-semibold'>Internship Portal</h3>
+      <div className='flex flex-col gap-6 text-justify font-semibold w-full'>
+        <NavLink to="/SuperAdmin" className={`link hover:bg-red-300 w-full rounded-lg p-2 ${activeLink ? 'active' : ''}`} onClick={() => handleLinkClick(0)}>
+          <button className='flex flex-row gap-2'>
           {activeLink ? <RiHome5Fill style={{fontSize: 22}}/> : <RiHome5Line style={{fontSize: 22}}/>}Dashboard
           </button>
         </NavLink>
-        <NavLink to="/InternshipCoordinator/applications" className={`link hover:bg-red-300 w-full rounded-lg p-2 ${activeLink ? 'active' : ''}`} onClick={() => handleLinkClick(0)}>
-          <button className='flex flex-row gap-x-2'>
-          {activeLink ? <IoDocuments style={{fontSize: 22}}/> : <IoDocumentsOutline style={{fontSize: 22}}/>}Applications
+        <NavLink to="/SuperAdmin/manageUser" className={`link hover:bg-red-300 w-full rounded-lg p-2 ${activeLink ? 'active' : ''}`} onClick={() => handleLinkClick(0)}>
+          <button className='flex flex-row gap-2'>
+          {activeLink ? <IoDocuments style={{fontSize: 22}}/> : <IoDocumentsOutline style={{fontSize: 22}}/>}Manage Users
           </button>
         </NavLink>
-        <NavLink to="/InternshipCoordinator/reports" className={`link hover:bg-red-300 w-full rounded-lg p-2 ${activeLink ? 'active' : ''}`} onClick={() => handleLinkClick(0)}>
-          <button className='flex flex-row gap-x-2'>
+        <NavLink to="/SuperAdmin/reports" className={`link hover:bg-red-300 w-full rounded-lg p-2 ${activeLink ? 'active' : ''}`} onClick={() => handleLinkClick(0)}>
+          <button className='flex flex-row gap-2'>
           {activeLink ? <IoDocuments style={{fontSize: 22}}/> : <IoDocumentsOutline style={{fontSize: 22}}/>}Reports
           </button>
         </NavLink>
+      </div>
+      <div className='flex flex-col absolute bottom-3 left-7'>
+      {/* <NavLink to="/Faculty/profile" className={`link hover:bg-red-300 w-full rounded-lg p-2 ${activeLink ? 'active' : ''}`} onClick={() => handleLinkClick(0)}>
+          <button className='flex flex-row gap-2 font-semibold'>
+          <img src="/assets/account.svg" className='w-6 h-6'/>My Profile
+          </button>
+      </NavLink> */}
       <NavLink to="/faculty/logout" className={`link hover:bg-red-300 w-full rounded-lg p-2 ${activeLink ? 'active' : ''}`} onClick={logout}>
           <button className='flex flex-row gap-2 font-semibold'>
           {activeLink ? <IoSettings style={{fontSize: 22}}/> : <IoSettingsOutline style={{fontSize: 22}}/>}Logout
@@ -56,4 +63,4 @@ const TopInternCoSidebar = () => {
   )
 }
 
-export default TopInternCoSidebar
+export default SuperAdminSidebar

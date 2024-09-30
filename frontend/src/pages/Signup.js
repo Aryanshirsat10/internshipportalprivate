@@ -56,15 +56,24 @@ const Signup = () => {
                 required
                 onChange={(e) => setName(e.target.value)}
               />
-              <input
+              <select
                 className="w-full h-12 border border-gray-800 px-3 rounded-lg"
-                placeholder="Department"
                 id="department"
-                type="text"
                 value={department}
-                required
                 onChange={(e) => setDepartment(e.target.value)}
-              />
+              >
+                <option value="" className='text-gray-500 font-medium'>Select Department</option>
+                <option value="Artificial Intelligence & Data Science">Artificial Intelligence & Data Science</option>
+                <option value="Computer Engineering">Computer Engineering</option>
+                <option value="Computer & Communication Engineering">Computer & Communication Engineering</option>
+                <option value="Computer Science & Business Systems">Computer Science & Business Systems</option>
+                <option value="Electronics & Computer Engineering">Electronics & Computer Engineering</option>
+                <option value="Electronics & Telecommunication Engineering">Electronics & Telecommunication Engineering</option>
+                <option value="Electronics Engineering (VLSI Design & Technology)">Electronics Engineering (VLSI Design & Technology)</option>
+                <option value="Information Technology">Information Technology</option>
+                <option value="Mechanical Engineering">Mechanical Engineering</option>
+                <option value="Robotics & Artificial Intelligence">Robotics & Artificial Intelligence</option>
+              </select>
               <input
                 className="w-full h-12 border border-gray-800 px-3 rounded-lg"
                 placeholder="Email"

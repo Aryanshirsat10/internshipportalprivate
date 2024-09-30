@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const { Schema } = mongoose;
-
+const Student = require('./Students'); 
 const internshipSchema = new mongoose.Schema({
   title: {
     type: String,
@@ -67,7 +67,11 @@ const internshipSchema = new mongoose.Schema({
     noofhours:{
       type: Number,
     },
-  }]
+  }],
+  interndepartment:{
+    type: String,
+    required: true
+  }
 });
 
 const Internship = mongoose.model('Internship', internshipSchema);

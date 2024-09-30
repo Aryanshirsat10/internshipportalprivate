@@ -8,6 +8,7 @@ const facultyauth = require("../middleware/facultyauth");
 const Internships = require("../models/Internship");
 const uuid = require("uuid");
 const Students = require('../models/Students');
+const ApplicationForCertificate = require('../models/applicationforcertificate');
 //login
 router.post("/faculty/login", async (req, res) => {
   try {
@@ -71,7 +72,15 @@ router.put("/faculty/:facultyId", (req, res) => {
     .catch((err) => res.status(400).json({ error: "Error: " + err }));
 });
 
-
+router.get('/getapplications',facultyauth,async(req,res)=>{
+  try {
+    const applications = await ApplicationForCertificate.find();
+    res.status(200).json(applications);
+  } catch (error) {
+    console.error(error)
+    res.status(500).json({message: 'Internal Server Error'});
+  }
+})
 
 router.get('/getfaculties',async (req,res) => {
     try{
@@ -95,6 +104,20 @@ router.get('/getfaculties',async (req,res) => {
       res.status(500).json({ message: 'Server Error', error: error.message });
     }
   });
+//get faculty by id
+  router.get('/getfacutly/:id',facultyauth,async(req,res)=>{
+      const userId = req.params.id;
+      try {
+        const faculty = await Faculties.findById(userId);
+        if(!faculty){
+          return res.status(404).json({message: 'Faculty not found'});
+        }
+        res.status(200).json(faculty);
+      } catch (error) {
+        res.status(500).json({message: error.message});
+      }
+  });
+
   
   router.get('/internships/getStudents/:internshipId', facultyauth, async (req, res) => {
     const { internshipId } = req.params;
@@ -220,7 +243,7 @@ router.get("/faculty/me", facultyauth, async (req, res) => {
   try {
     const faculty = await Faculties.findById(req.user.userId);
     if (!faculty) return res.status(404).json({ message: "Faculty not found" });
-    res.json(faculty._id);
+    res.json(faculty);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }

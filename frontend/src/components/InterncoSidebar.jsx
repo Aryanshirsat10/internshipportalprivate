@@ -41,6 +41,11 @@ const InterncoSidebar = () => {
           {activeLink ? <IoDocuments style={{fontSize: 22}}/> : <IoDocumentsOutline style={{fontSize: 22}}/>}Applications
           </button>
         </NavLink>
+        <NavLink to="/InternshipCoordinator/reports" className={`link hover:bg-red-300 w-full rounded-lg p-2 ${activeLink ? 'active' : ''}`} onClick={() => handleLinkClick(0)}>
+          <button className='flex flex-row gap-2'>
+          {activeLink ? <IoDocuments style={{fontSize: 22}}/> : <IoDocumentsOutline style={{fontSize: 22}}/>}Reports
+          </button>
+        </NavLink>
       </div>
       <div className='flex flex-col absolute bottom-3 left-7'>
       {/* <NavLink to="/Faculty/profile" className={`link hover:bg-red-300 w-full rounded-lg p-2 ${activeLink ? 'active' : ''}`} onClick={() => handleLinkClick(0)}>

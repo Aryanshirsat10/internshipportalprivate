@@ -5,6 +5,16 @@ const StudentProfile = () => {
         firstName: '',
         lastName: '',
         gender: '',
+        subTitle: '',
+        bio:'',
+        education: [
+            {
+                university: '',
+                yearOfPassing: '',
+                percentage: '',
+                degree: '',
+            }
+        ],
         phone: '',
         yearOfStudy: '',
         cgpa: '',
@@ -12,13 +22,14 @@ const StudentProfile = () => {
         description: '',
         birthday: '',
         skills: [],
-        education: []
+        resumeUrl:'',
       };
     
     const [profile, setProfile] = useState(defaultProfile);
 
-  const [resume, setResume] = useState(null);
-
+  const [resumeUrl, setResumeUrl] = useState("");
+  const departments = ['Artificial Intelligence & Data Science', 'Computer Engineering', 'Computer & Communication Engineering', 'Computer Science & Business Systems', 'Electronics & Computer Engineering','Electronics & Telecommunication Engineering','Electronics Engineering (VLSI Design & Technology)',
+'Information Technology','Mechanical Engineering','Robotics & Artificial Intelligence'];
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setProfile({ ...profile, [name]: value });
@@ -40,9 +51,9 @@ const StudentProfile = () => {
   const handleEducationChange = (index, e) => {
     const { name, value } = e.target;
     const updatedEducation = [...profile.education];
-    updatedEducation[index][name] = value;
+    updatedEducation[index][name] = value;  // Update the specific field
     setProfile({ ...profile, education: updatedEducation });
-  };
+    };
   const handleAddSkill = () => {
     // Ensure the last skill is not empty before adding a new one
     if (profile.skills.length === 0 || profile.skills[profile.skills.length - 1].trim() !== '') {
@@ -51,9 +62,24 @@ const StudentProfile = () => {
     }
   };
 
-  const handleResumeUpload = (e) => {
-    setResume(e.target.files[0]);
-  };
+  const handleAddEducation = () => {
+    const lastEducation = profile.education[profile.education.length - 1];
+    // Check if the last education entry has any empty fields
+    const hasEmptyField = lastEducation && (
+        !lastEducation.university.trim() ||
+        !lastEducation.degree.trim() ||
+        !lastEducation.yearOfPassing.trim() ||
+        !lastEducation.percentage.trim()
+    );
+
+    if (profile.education.length === 0 || hasEmptyField) {
+        setProfile({
+            ...profile,
+            education: [...profile.education, { university: '', yearOfPassing: '', percentage: '', degree: '' }]
+        });
+    }
+};
+
   useEffect(() => {
     const fetchInitialdetails = async()=>{
         try {
@@ -88,9 +114,22 @@ const StudentProfile = () => {
 
     // Check if there are any empty skills
   const emptySkills = profile.skills.some(skill => skill.trim() === '');
-
+    // Check if education array has any entries with empty values
+    const emptyEducation = profile.education.some(edu =>
+        !edu.university.trim() || 
+        !edu.degree.trim() || 
+        isNaN(edu.yearOfPassing) || 
+        edu.yearOfPassing <= 0 || 
+        isNaN(edu.percentage) || 
+        edu.percentage < 0 || 
+        edu.percentage > 100
+    );
   if (emptySkills) {
     alert('Please fill out all skills before saving.');
+    return; // Exit early if there are empty skills
+  }
+  if (emptyEducation) {
+    alert('Please fill out all education details before saving.');
     return; // Exit early if there are empty skills
   }
 
@@ -124,12 +163,12 @@ const StudentProfile = () => {
     {/* <div className='flex flex-col bg-red-50 p-5 w-[15%] h-svh'>
         <Sidebar/>
     </div> */}
-    <div className='bg-gray-100 flex flex-grow'>
+    <div className='bg-gray-100 flex flex-grow overflow-x-hidden'>
         <div className="font-sans leading-normal tracking-normal p-5 flex-grow">
-            <div className="container my-5 mx-auto">
+            <div className="container my-5">
                 <div className="md:flex no-wrap md:-mx-2">
                     {/* Left Side */}
-                    <div className="w-full md:w-3/12 md:mx-2">
+                    <div className="w-full md:w-3/12 md:mx-2 ">
                         {/* Profile Card */}
                         <div className="bg-white p-3 border-t-4 border-rose-400">
                             <div className="image overflow-hidden">
@@ -138,12 +177,14 @@ const StudentProfile = () => {
                                     alt="Profile Pic" />
                             </div>
                             <h1 className="text-gray-900 font-bold text-xl leading-8 my-1">{profile.name}</h1>
-                            <h3 className="text-gray-600 font-lg text-semibold leading-6">Computer Science Student</h3>
+                            <input type="text" className="text-gray-600 font-lg text-semibold leading-6 border w-full py-2 pl-1"name='subTitle' onChange={handleInputChange} placeholder='Short Description' value={profile?.subTitle}/>
+                            <h4 className="px-1 pt-2 font-semibold">Bio</h4>
                             <textarea
-                              name="description"
-                              value={profile.description}
+                              name="bio"
+                              value={profile.bio}
                               onChange={handleInputChange}
                               rows="3"
+                              placeholder='Bio'
                               className="px-4 py-2 border rounded w-full resize-none mt-3"
                             />
                             {/* <ul className="bg-gray-100 text-gray-600 hover:text-gray-700 hover:shadow py-2 px-3 mt-3 divide-y rounded shadow-sm">
@@ -199,7 +240,17 @@ const StudentProfile = () => {
                                         </div>
                                         <div className="grid grid-cols-2">
                                             <div className="px-4 py-2 font-semibold">Department</div>
-                                            <input type="text" name="email" value={profile.department} onChange={handleInputChange} className="px-4 py-2 border rounded" />
+                                            <select
+                                                name="department"
+                                                value={profile.department}
+                                                onChange={handleInputChange}
+                                                className="px-4 py-2 border rounded"
+                                            >
+                                                <option value="">Select Department</option>
+                                                {departments.map((dept, index) => (
+                                                <option key={index} value={dept}>{dept}</option>
+                                                ))}
+                                            </select>
                                         </div>
                                         {/* <div className="grid grid-cols-2">
                                             <div className="px-4 py-2 font-semibold">Birthday</div>
@@ -221,10 +272,10 @@ const StudentProfile = () => {
                                     <button type="button" onClick={handleAddSkill} className="ml-auto bg-rose-500 text-white px-3 py-1 rounded">Add Skill</button>
                                 </div>
                                 <ul className="list-inside space-y-2">
-                                    {profile.skills.map((skill, index) => (
+                                    {profile?.skills.map((skill, index) => (
                                         <li key={index}>
                                             <div className="flex">
-                                                <input type="text" name="skill" value={skill} onChange={(e) => handleSkillChange(index, e)} className="px-4 py-2 border rounded mr-2 w-1/2" />
+                                                <input type="text" name="skill" value={skill} onChange={(e) => handleSkillChange(index, e)} className="px-4 py-2 border rounded w-1/2" />
                                             </div>
                                         </li>
                                     ))}
@@ -240,14 +291,16 @@ const StudentProfile = () => {
                                         </svg>
                                     </span>
                                     <span className="tracking-wide">Education</span>
+                                    <button type="button" onClick={handleAddEducation} className="ml-auto bg-rose-500 text-white px-3 py-1 rounded">Add Education</button>
                                 </div>
                                 <ul className="list-inside space-y-2">
-                                    {profile.education.map((edu, index) => (
+                                    {profile?.education.map((edu, index) => (
                                         <li key={index}>
-                                            <div className="flex">
-                                                <input type="text" name="degree" value={edu.degree} onChange={(e) => handleEducationChange(index, e)} className="px-4 py-2 border rounded mr-2 w-1/3" />
-                                                <input type="text" name="institution" value={edu.institution} onChange={(e) => handleEducationChange(index, e)} className="px-4 py-2 border rounded mx-2 w-1/3" />
-                                                <input type="text" name="period" value={edu.period} onChange={(e) => handleEducationChange(index, e)} className="px-4 py-2 border rounded ml-2 w-1/3" />
+                                            <div className="flex gap-2">
+                                                <input type="text" name="university" value={edu.university} placeholder="university" onChange={(e) => handleEducationChange(index, e)} className="px-4 py-2 border rounded w-1/3" />
+                                                <input type="text" name="yearOfPassing" value={edu.yearOfPassing} placeholder="yearOfPassing" onChange={(e) => handleEducationChange(index, e)} className="px-4 py-2 border rounded w-1/3" />
+                                                <input type="text" name="percentage" value={edu.percentage} placeholder="percentage" onChange={(e) => handleEducationChange(index, e)} className="px-4 py-2 border rounded w-1/3" />
+                                                <input type="text" name="degree" value={edu.degree} placeholder="degree" onChange={(e) => handleEducationChange(index, e)} className="px-4 py-2 border rounded w-1/3" />
                                             </div>
                                         </li>
                                     ))}
@@ -262,9 +315,9 @@ const StudentProfile = () => {
                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 14l9-5-9-5-9 5zm0 7v-7m-9-7v11a2 2 0 002 2h14a2 2 0 002-2V7" />
                                         </svg>
                                     </span>
-                                    <span className="tracking-wide">Resume</span>
+                                    <span className="tracking-wide">Resume URL</span>
                                 </div>
-                                <input type="file" onChange={handleResumeUpload} className="px-4 py-2 border rounded" />
+                                <input type="url" name="resumeUrl" onChange={handleInputChange} value={profile.resumeUrl} className="px-4 py-2 border rounded w-1/2" placeholder='Enter your resume url here'/>
                             </div>
                             <div className="my-4"></div>
                             {/* Save Button */}

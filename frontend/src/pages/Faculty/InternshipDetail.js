@@ -86,6 +86,7 @@ const InternshipDetail = () => {
     fetchfacultyId();
     fetchStudents();
     fetchworkingStudents();
+    console.log(studentsworking);
   }, []);
 
   const fetchStudents = async () => {
@@ -326,8 +327,8 @@ const InternshipDetail = () => {
         },
       });
       const data = await response.json(); // Parse response as JSON
-      console.log(data); // Log the parsed data to see what it contains
-      setFacultyId(data); // Assuming faculty ID is available in the response
+      console.log(data._id); // Log the parsed data to see what it contains
+      setFacultyId(data._id); // Assuming faculty ID is available in the response
     } catch (error) {
       console.error('Error fetching faculty ID:', error);
     }

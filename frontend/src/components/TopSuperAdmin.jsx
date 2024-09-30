@@ -4,7 +4,7 @@ import { RiHome5Fill,RiHome5Line } from "react-icons/ri";
 import { IoDocuments,IoDocumentsOutline,IoSettings,IoSettingsOutline } from "react-icons/io5";
 import { MdExplore,MdOutlineExplore  } from "react-icons/md";
 import Cookies from "js-cookie";
-const TopInternCoSidebar = () => {
+const TopSuperAdminSidebar = () => {
   const [activeLink, setActiveLink] = useState(0);
 
   const handleLinkClick = (index) => {
@@ -56,4 +56,4 @@ const TopInternCoSidebar = () => {
   )
 }
 
-export default TopInternCoSidebar
+export default TopSuperAdminSidebar

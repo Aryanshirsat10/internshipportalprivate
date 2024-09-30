@@ -31,6 +31,30 @@ const studentSchema = new mongoose.Schema({
   gender:{
     type:String
   },
+  subTitle:{
+    type:String
+  },
+  bio:{
+    type:String
+  },
+  education: [{
+    university: {
+      type: String,
+      required: true
+    },
+    yearOfPassing: {
+      type: Number,
+      required: true
+    },
+    percentage: {
+      type: Number,
+      required: true,
+    },
+    degree:{
+      type: String,
+      required: true
+    }
+  }],
   phone: {
     type: String,
     validate: {
@@ -55,6 +79,10 @@ const studentSchema = new mongoose.Schema({
       enum: ['applied', 'accepted', 'rejected','complete','incomplete','withdraw'],
     }
   }],
+  resumeUrl:{
+    type: String,
+    default: null
+  },
 });
 
 const Students = mongoose.model('Students', studentSchema);

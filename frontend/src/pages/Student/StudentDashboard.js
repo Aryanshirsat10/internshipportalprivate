@@ -4,7 +4,7 @@ import FilterDropdown from '../../components/FilterDropdown';
 import InternshipCard from '../../components/InternshipsCard';
 import { useUser } from '../../UserContext';
 import Topsidebar from '../../components/Topsidebar';
-
+import Cookies from 'js-cookie';
 
 // Skeleton loader component
 const SkeletonLoader = () => (
@@ -27,6 +27,7 @@ const SkeletonLoader = () => (
 const StudentDashboard = () => {
   const {setUser} = useUser();
   const [existingData, setExistingData] = useState([]);
+  const [studentName, setStudentName] = useState('');
   const [isLoading, setIsLoading] = useState(true);
   const [filterCriteria, setFilterCriteria] = useState({
     title: '',
@@ -61,6 +62,28 @@ const StudentDashboard = () => {
 
     fetchExistingData();
   }, []);
+  useEffect(()=>{
+    const fetchstudentdetails=async()=>{
+      try {
+        const response = await fetch('http://localhost:5000/api/students/me', {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            'x-auth-token': Cookies.get('token'),
+            'x-session-id': Cookies.get('sessionId'),
+          },
+        });
+        const data = await response.json();
+        // console.log(data);
+        const firstName = data.name?.split(' ')[0]; 
+        // console.log(firstName);
+          setStudentName(firstName);
+      } catch (error) {
+        console.error('Error fetching existing data:', error);
+      }
+    }
+    fetchstudentdetails();
+    },[])
   // const handleFilterChange = (field, value) => {
   //   setFilterCriteria({ ...filterCriteria, [field]: value });
   // };
@@ -81,7 +104,7 @@ const StudentDashboard = () => {
       </div>
       </div>
       <div className='rounded-lg bg-slate-100 min-[990px]:w-[80%] p-5 overflow-y-auto overscroll-x-none h-full'>
-        <h1 className="flex flex-col text-3xl font-bold items-start">Welcome back</h1>
+        <h1 className="flex flex-col text-3xl font-bold items-start">Welcome back {studentName}</h1>
         {isLoading ? (
           // Display skeleton loader while loading
           <>

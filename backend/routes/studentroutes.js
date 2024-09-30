@@ -165,7 +165,11 @@ router.get('/student/applyforcertificate', auth, async (req, res) => {
 router.put('/student/updateDetails', auth, async (req, res) => {
   try {
     const studentId = req.user.userId; // Assuming userId is stored in req.user
-    const { gender, phone, yearOfStudy, cgpa, skills:newSkills } = req.body;
+    const {
+      gender, phone, yearOfStudy, cgpa, skills: newSkills,
+      subTitle, bio, resumeUrl, education: newEducation,
+      internshipApplications: newInternshipApplications
+    } = req.body;
 
     // Fetch the student by ID
     const student = await Student.findById(studentId);
@@ -179,12 +183,24 @@ router.put('/student/updateDetails', auth, async (req, res) => {
     if (phone) student.phone = phone;
     if (yearOfStudy) student.yearOfStudy = yearOfStudy;
     if (cgpa) student.cgpa = cgpa;
+    if (subTitle) student.subTitle = subTitle;
+    if (bio) student.bio = bio;
+    if (resumeUrl) student.resumeUrl = resumeUrl;
+
     // Update skills array
     if (newSkills && newSkills.length > 0) {
-      // Merge new skills with existing skills
       const updatedSkills = [...student.skills, ...newSkills];
-      // Remove duplicate skills using a Set
       student.skills = [...new Set(updatedSkills)];
+    }
+
+    // Update education array
+    if (newEducation && newEducation.length > 0) {
+      student.education = newEducation; // Overwrites the entire education array
+    }
+
+    // Update internship applications array
+    if (newInternshipApplications && newInternshipApplications.length > 0) {
+      student.internshipApplications = newInternshipApplications; // Overwrites the entire internshipApplications array
     }
 
     // Save updated student data
@@ -196,6 +212,7 @@ router.put('/student/updateDetails', auth, async (req, res) => {
     res.status(500).send('Server Error');
   }
 });
+
 
 // Protected route example
 router.get("/students/me", auth, async (req, res) => {

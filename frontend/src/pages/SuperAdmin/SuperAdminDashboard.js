@@ -1,6 +1,5 @@
 import React,{useState, useEffect} from 'react'
-import InterncoSidebar from '../../components/InterncoSidebar'
-import TopInternCoSidebar from '../../components/TopInternCoSidebar'
+
 // import { TrendingUp } from "lucide-react"
 import { Pie, PieChart, CartesianGrid, XAxis, Line, LineChart, Bar, BarChart,Label, LabelList } from "recharts"
 
@@ -17,7 +16,9 @@ import {
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
-} from "../../components/ui/chart"
+} from "../../components/ui/chart"  
+import SuperAdminSidebar from '../../components/SuperAdminSidebar';
+import TopSuperAdminSidebar from '../../components/TopSuperAdmin';
 
 const chartData = [
   { browser: "chrome", visitors: 275, fill: "var(--color-chrome)" },
@@ -135,7 +136,7 @@ const chartConfig1 = {
 }
 
 
-const InternshipCoordinatorDashboard = () => {
+const SuperAdminDashboard = () => {
   const [totalInternships, setTotalInternships] = useState([]);
   const [activeInternships, setActiveInternships] = useState([]);
   const [completedInternships, setCompletedInternships] = useState([])
@@ -247,12 +248,12 @@ const InternshipCoordinatorDashboard = () => {
   return (
     <div className='min-[990px]:flex w-full h-screen'>
       <div className='min-[990px]:flex min-[990px]:flex-col bg-red-50 p-5 w-[20%] hidden'>
-        <InterncoSidebar/>
+        <SuperAdminSidebar/>
       </div>
       <div className='flex flex-col bg-red-50 h-fit min-[990px]:p-5 p-2 min-[990px]:hidden items-center'>
       <h3 className='text-xl font-semibold'>Internship Portal</h3>
       <div className='overflow-x-scroll w-screen pt-5'>
-        <TopInternCoSidebar/>
+        <TopSuperAdminSidebar/>
       </div>
       </div>
       <div className='rounded-lg bg-slate-100 min-[990px]:w-[80%] p-5 overflow-y-auto h-full'>
@@ -504,4 +505,4 @@ const InternshipCoordinatorDashboard = () => {
   )
 }
 
-export default InternshipCoordinatorDashboard
+export default SuperAdminDashboard

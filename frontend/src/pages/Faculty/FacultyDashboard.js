@@ -5,16 +5,28 @@ import { MdOutlineLocationOn } from "react-icons/md";
 import FacultySidebar from '../../components/FacultySidebar';
 import InternshipCard from '../../components/InternshipsCard';
 import { useUser } from '../../UserContext';
+import Cookies from "js-cookie";
 import TopfacultySidebar from '../../components/TopfacultySidebar';
 const FacultyDashboard = () => {
   const {setUser} = useUser();
   const [existingData, setExistingData] = useState([]);
+  const [facultyname, setFacultyName] = useState('');
   const [filterCriteria, setFilterCriteria] = useState({
     title: '',
     startDate: '',
     duration: '',
     location: '',
   });
+  const [isFilterActive, setIsFilterActive] = useState(false);
+  useEffect(() => {
+    // Check if any filter criteria is selected
+    const { title, startDate, duration, location } = filterCriteria;
+    if (title || startDate || duration || location) {
+      setIsFilterActive(true);
+    } else {
+      setIsFilterActive(false);
+    }
+  }, [filterCriteria]);
 
   useEffect(() => {
     // Fetch existing data from the database when the component mounts
@@ -36,7 +48,28 @@ const FacultyDashboard = () => {
 
     fetchExistingData();
   }, []);
-
+useEffect(()=>{
+const fetchfacultydetails=async()=>{
+  try {
+    const response = await fetch('http://localhost:5000/api/faculty/me', {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-auth-token': Cookies.get('token'),
+        'x-session-id': Cookies.get('sessionId'),
+      },
+    });
+    const data = await response.json();
+    // console.log(data);
+    const firstName = data.name?.split(' ')[1]; 
+    // console.log(firstName);
+      setFacultyName(firstName);
+  } catch (error) {
+    console.error('Error fetching existing data:', error);
+  }
+}
+fetchfacultydetails();
+},[])
   useEffect(()=>{
     const userData = 'Faculty';
     setUser(userData);
@@ -62,7 +95,7 @@ const FacultyDashboard = () => {
       </div>
       </div>
       <div className='rounded-lg bg-slate-100 min-[990px]:w-[80%] p-5 overflow-y-auto h-full'>
-        <h1 className="flex flex-col text-3xl font-bold items-start">Welcome back</h1>
+        <h1 className="flex flex-col text-3xl font-bold items-start">Welcome back {facultyname}</h1>
         <div>
         <div className='flex flex-row pt-5 justify-between lg:w-[95%] w-[95%]'>
           <h2 className='text-xl font-semibold text-slate-600'>
@@ -72,6 +105,7 @@ const FacultyDashboard = () => {
               {/* Updated FilterDropdown with a button */}
               <FilterDropdown
                 filterCriteria={filterCriteria}
+                isFilterActive={isFilterActive}
                 options={{
                   title: uniqueTitles,
                   startDate: uniqueStartDates,

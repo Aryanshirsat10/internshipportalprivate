@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { FaChevronDown } from 'react-icons/fa';
 
-const FilterDropdown = ({ filterCriteria, options, onChange }) => {
+const FilterDropdown = ({ filterCriteria, options, onChange, isFilterActive }) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [openCriteriaKey, setOpenCriteriaKey] = useState(null);
 
@@ -71,6 +71,7 @@ const FilterDropdown = ({ filterCriteria, options, onChange }) => {
           ))}
           <button
             className="reset-button mt-4 px-4 py-2 text-white bg-red-500 rounded hover:bg-red-600 focus:outline-none"
+            disabled={!isFilterActive}
             onClick={handleReset}
           >
             Reset

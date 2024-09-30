@@ -2,17 +2,19 @@ import React, { useEffect } from 'react'
 import { useState } from 'react'
 import Cookies from "js-cookie";
 import Checkbox from "../components/ui/Checkbox";
-import { NavLink } from 'react-router-dom';
+import Modal from '../components/ui/Modal';
+// import { NavLink } from 'react-router-dom';
 const Login = () => {
   const [emailId ,setEmailId] = useState('');
   const [password, setPassword] = useState('');
   const [rememberMe, setRememberMe] = useState(false);
   const [role, setRole] = useState('');
+  const [rolesList, setRolesList] = useState([]);
+  const [showRoleModal, setShowRoleModal] = useState(false);
   const handleSubmit = async(e)=>{
     e.preventDefault();
-    if(role == "Faculty"){
       try {
-        const response = await fetch("http://localhost:5000/api/faculty/login",{
+        const response = await fetch("http://localhost:5000/api/user/login",{
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -23,6 +25,7 @@ const Login = () => {
           const data = await response.json();
           const token = data["x-auth-token"];
           const sessionId = data["x-session-id"];
+          const userRoles = data.role;
   
           Cookies.set("token", token, { expires: 365 }); // Token expires after 365 days
           // If the user opts to be remembered, store the token persistently
@@ -31,7 +34,16 @@ const Login = () => {
           } else {
             Cookies.set("sessionId", sessionId, { expires: 3 / 24 }); // Session ID expires after 3 hour
           }
-          window.location.href = "/Faculty";
+          if (userRoles.length === 1) {
+            // Directly redirect if there's only one role
+            handleRoleSelection(userRoles[0]);
+          } else if (userRoles.length > 1) {
+            // Show modal to select role if multiple roles
+            setRolesList(userRoles);
+            setShowRoleModal(true);
+          } else {
+            console.error('No role found for user.');
+          }
         }
         
         else{
@@ -41,39 +53,21 @@ const Login = () => {
       } catch (error) {
         console.log(error);
       }
-    }
-    else if(role == "student"){
-      try {
-        const response = await fetch("http://localhost:5000/api/student/login",{
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ emailId, password }),
-        })
-        if(response.ok){
-          const data = await response.json();
-          const token = data["x-auth-token"];
-          const sessionId = data["x-session-id"];
-  
-          Cookies.set("token", token, { expires: 365 }); // Token expires after 365 days
-          // If the user opts to be remembered, store the token persistently
-          if (rememberMe) {
-            Cookies.set("sessionId", sessionId, { expires: 30 });
-          } else {
-            Cookies.set("sessionId", sessionId, { expires: 3 / 24 }); // Session ID expires after 3 hour
-          }
-          window.location.href = "/Student";
-        }
-        else{
-          const error = await response.json();
-          console.error(error.message);
-        }
-      } catch (error) {
-        console.log(error);
+    };
+
+    const handleRoleSelection = (selectedRole) => {
+      if (selectedRole === 'Faculty') {
+        window.location.href = "/Faculty";
+      } else if (selectedRole === 'Student') {
+        window.location.href = "/Student";
+      } 
+      else if(selectedRole === 'Internship Coordinator'){
+        window.location.href = "/InternshipCoordinator";
       }
-    }
-  }
+      else {
+        console.error('Unknown role:', selectedRole);
+      }
+    };
   
     return (
       <div className='flex flex-col lg:flex-row w-screen h-[100vh] relative'>
@@ -91,53 +85,6 @@ const Login = () => {
           <div id="form-container" className="bg-white p-5 sm:p-10 rounded-lg shadow-2xl w-full max-w-md relative z-10 transform transition duration-500 ease-in-out">
             <h2 id="form-title" className="text-center text-2xl lg:text-3xl font-bold mb-7 text-gray-800">Login</h2>
             <form className="space-y-5" onSubmit={handleSubmit}>
-              <div className="flex flex-col items-center space-x-2">
-                <label className="text-sm font-medium">Role</label>
-                <div className="flex items-center space-x-4">
-                  <div className="flex items-center space-x-2">
-                    <input
-                      className="h-4 w-4"
-                      id="student"
-                      name="role"
-                      type="radio"
-                      value="student"
-                      checked={role === "student"}
-                      onChange={(e) => setRole(e.target.value)}
-                    />
-                    <label className="text-sm font-medium" htmlFor="student">
-                      Student
-                    </label>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <input
-                      className="h-4 w-4"
-                      id="Faculty"
-                      name="role"
-                      type="radio"
-                      value="Faculty"
-                      checked={role === "Faculty"}
-                      onChange={(e) => setRole(e.target.value)}
-                    />
-                    <label className="text-sm font-medium" htmlFor="Faculty">
-                      Faculty
-                    </label>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <input
-                      className="h-4 w-4"
-                      id="Internship Coordinator"
-                      name="role"
-                      type="radio"
-                      value="InternshipCoordinator"
-                      checked={role === "InternshipCoordinator"}
-                      onChange={(e) => setRole(e.target.value)}
-                    />
-                    <label className="text-sm font-medium" htmlFor="InternshipCoordinator">
-                      Internship Coordinator
-                    </label>
-                  </div>
-                </div>
-              </div>
               <input
                 className="w-full h-12 border border-gray-800 px-3 rounded-lg"
                 placeholder="Email"
@@ -177,6 +124,22 @@ const Login = () => {
               </button>
             </form>
             <a className="text-blue-500 hover:text-blue-800 text-sm" href="/signup">Don't have a account signup</a>
+            {showRoleModal && (
+              <Modal onClose={() => setShowRoleModal(false)}>
+                <h2 className="text-2xl font-bold mb-4">Select Role</h2>
+                <div className="flex flex-col gap-2">
+                  {rolesList.map((roleOption, index) => (
+                    <button
+                      key={index}
+                      className="w-full h-12 bg-[#58595b] hover:bg-[#b7202e] text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                      onClick={() => handleRoleSelection(roleOption)}
+                    >
+                      {roleOption}
+                    </button>
+                  ))}
+                </div>
+              </Modal>
+            )}
             {/* <hr className="my-4 border-gray-300 w-full" />
             <h4 className='text-md font-thin w-full text-center'>OR</h4>
               <NavLink to="/signup">

@@ -4,6 +4,7 @@ import { useLocation } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
 import Modal from '../../components/Modal';
 import Cookies from "js-cookie";
+import { toast } from 'react-toastify';
 
 const InternshipDetail = () => {
   const location = useLocation();
@@ -96,7 +97,48 @@ const InternshipDetail = () => {
   const handleCloseModal = () => {
     setShowModal(false);
   };
-
+  const handleDownloadCertificate = async()=>{
+    try {
+      const certificate = await fetch('http://localhost:5000/api/downloadcertificate',{
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-auth-token': Cookies.get('token'),
+          'x-session-id': Cookies.get('sessionId')
+        },
+        body: JSON.stringify({ internshipId: internship._id, studentId : student._id }),
+      });
+      if(!certificate.ok){
+        const errorData = await certificate.json();
+        throw new Error(errorData.message || 'Failed to generate certificate');
+      }
+      if (certificate.ok) {
+        // Check if the response is a PDF
+        const contentType = certificate.headers.get('content-type');
+        if (contentType && contentType.includes('application/pdf')) {
+          const blob = await certificate.blob();
+          const url = window.URL.createObjectURL(blob);
+          
+          // Create a hidden link and trigger the download
+          const link = document.createElement('a');
+          link.href = url;
+          link.download = `${student.name}_${internship.title}_certificate.pdf`;
+          link.style.display = 'none';
+          document.body.appendChild(link);
+          link.click();
+          
+          // Clean up
+          document.body.removeChild(link);
+          window.URL.revokeObjectURL(url);
+        } else {
+          throw new Error('Received non-PDF response from server');
+        }
+      toast.success("Certificate downloaded successfully");
+    }
+  } catch (error) {
+      console.error('Error applying for internship:', error);
+    }
+  }
   const handleApply = async () => {
     try {
       const studentResponse = await fetch('http://localhost:5000/api/students/me', {
@@ -206,6 +248,7 @@ const InternshipDetail = () => {
         }
 
         const student = await studentResponse.json();
+        setStudent(student);
         const application = student.internshipApplications.find(app => app.internshipId === internship._id);
 
         if (application) {
@@ -230,14 +273,16 @@ const InternshipDetail = () => {
 
         if (!applicationResponse.ok) {
           const errorData = await applicationResponse.json();
-          setAppliedForCertificateStatus('noapplied')
+          setAppliedForCertificateStatus('not applied')
           // throw new Error(errorData.message || 'Failed to fetch student ID');
         }
 
         const student = await applicationResponse.json();
-
-        if (student) {
+        if (student.certificateIssued === "no") {
           setAppliedForCertificateStatus('applied');
+        }
+        else if(student.certificateIssued === "yes"){
+          setAppliedForCertificateStatus('download');
         }
       } catch (error) {
         console.error('Error fetching application status:', error);
@@ -313,7 +358,7 @@ const InternshipDetail = () => {
             Application Status: {applicationStatus}
           </div>
         ):null}
-        {applicationStatus === 'complete' && appliedForCertificateStatus !== 'applied' ? (
+        {applicationStatus === 'complete' && appliedForCertificateStatus === 'not applied' ? (
         <button className='btn bg-[#00a5ec] p-2 w-fit h-fit hover:bg-[#008bdc] text-white rounded-lg' type='button' onClick={handleCertificateApply}>
           Apply for Certificate
         </button>
@@ -323,6 +368,11 @@ const InternshipDetail = () => {
           {console.log(applicationStatus)}
             Application Status for Certificate: {appliedForCertificateStatus}
           </div>
+        ):null}
+        {applicationStatus === 'complete' && appliedForCertificateStatus === 'download' ? (
+        <button className='btn bg-[#00a5ec] p-2 w-fit h-fit hover:bg-[#008bdc] text-white rounded-lg' type='submit' onClick={handleDownloadCertificate}>
+        Download Certificate
+        </button>
         ):null}
         {!applicationStatus && (
           <button className='btn bg-[#00a5ec] p-2 w-fit h-fit hover:bg-[#008bdc] text-white rounded-lg' type='submit' onClick={handleApplyClick}>
