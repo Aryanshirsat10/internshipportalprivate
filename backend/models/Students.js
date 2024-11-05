@@ -83,6 +83,10 @@ const studentSchema = new mongoose.Schema({
     type: String,
     default: null
   },
+  profileUrl:{
+    type: String,
+    default: null
+  }
 });
 
 const Students = mongoose.model('Students', studentSchema);

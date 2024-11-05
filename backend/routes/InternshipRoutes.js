@@ -443,18 +443,18 @@ router.post('/download-report', async (req, res) => {
         const row = [];
 
         // Build row dynamically based on selected columns
-        if (selectedColumns.includes('Project Title')) row.push(internship.title);
-        if (selectedColumns.includes('Mentor Name')) row.push(mentor.name);
-        if (selectedColumns.includes('Mentor Email')) row.push(mentor.emailId);
-        if (selectedColumns.includes('Name of Students')) row.push(student.name);
-        if (selectedColumns.includes('Branch')) row.push(student.department);
-        if (selectedColumns.includes('Class')) row.push(student.class);
-        if (selectedColumns.includes('Student Email')) row.push(student.email);
-        if (selectedColumns.includes('Mobile No')) row.push(student.mobile);
-        if (selectedColumns.includes('Status')) row.push(studentData.status);
-        if (selectedColumns.includes('Duration in hrs')) row.push(studentData.noofhours);
-        if (selectedColumns.includes('Starting Date')) row.push(internship.startDate.toLocaleDateString());
-        if (selectedColumns.includes('Completion Date')) row.push(internship.endDate.toLocaleDateString());
+        if (selectedColumns.includes('Project Title')) row.push(internship.title || 'NA');
+        if (selectedColumns.includes('Mentor Name')) row.push(mentor.name || 'NA');
+        if (selectedColumns.includes('Mentor Email')) row.push(mentor.emailId || 'NA');
+        if (selectedColumns.includes('Name of Students')) row.push(student.name || 'NA');
+        if (selectedColumns.includes('Branch')) row.push(student.department || 'NA');
+        if (selectedColumns.includes('Class')) row.push(student.class || 'NA');
+        if (selectedColumns.includes('Student Email')) row.push(student.email || 'NA');
+        if (selectedColumns.includes('Mobile No')) row.push(student.mobile || 'NA');
+        if (selectedColumns.includes('Status')) row.push(studentData.status || 'NA');
+        if (selectedColumns.includes('Duration in hrs')) row.push(studentData.noofhours || 'NA');
+        if (selectedColumns.includes('Starting Date')) row.push(internship.startDate.toLocaleDateString() || 'NA');
+        if (selectedColumns.includes('Completion Date')) row.push(internship.endDate.toLocaleDateString() || 'NA');
         if (selectedColumns.includes('Remark')) row.push(internship.remark || '');
 
         data.push(row); // Push row data

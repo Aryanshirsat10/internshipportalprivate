@@ -65,9 +65,10 @@ const InternshipDetail = () => {
         description: queryParams.get('description') || '',
         eligibilityCriteria: queryParams.get('eligibilityCriteria') || '',
       });
+      setLoadedFromURL(true);
     }
   }, [location.state, queryParams, ]);
-
+  const [loadedFromURL, setLoadedFromURL] = useState(false);
   const formattedStartDate = formatDate(internship.startDate);
   const duration = calculateDuration(internship.startDate, internship.endDate);
   const formattedApplyDate = formatDate(internship.applicationDeadline);
@@ -81,6 +82,8 @@ const InternshipDetail = () => {
       endDate: internship.endDate,
       applicationDeadline: internship.applicationDeadline,
       skillsRequired: JSON.stringify(internship.skillsRequired),
+      eligibilityCriteria: internship.eligibilityCriteria,
+      description: internship.description,
       internshipId: internship.internshipId,
     }).toString();
     return `${baseUrl}?${queryParams}`;
@@ -321,7 +324,7 @@ const InternshipDetail = () => {
             </div>
           </div>
           <div className='flex flex-row justify-between'>
-            <p className='flex pb-5 font-normal text-lg text-slate-700'>{internship.currentApplicants.length} applications</p>
+            {!loadedFromURL && (<p className='flex pb-5 font-normal text-lg text-slate-700'>{internship.currentApplicants.length} applications</p>)}
             <div
               onClick={() => {
                 const shareableLink = generateShareableLink();
@@ -353,28 +356,28 @@ const InternshipDetail = () => {
             </div>
           </div>
         </div>
-        {applicationStatus && applicationStatus !== 'complete' ? (
+        {applicationStatus && !loadedFromURL && applicationStatus !== 'complete' ? (
           <div className='text-slate-500 font-medium p-2 capitalize'>
             Application Status: {applicationStatus}
           </div>
         ):null}
-        {applicationStatus === 'complete' && appliedForCertificateStatus === 'not applied' ? (
+        {applicationStatus === 'complete' && !loadedFromURL && appliedForCertificateStatus === 'not applied' ? (
         <button className='btn bg-[#00a5ec] p-2 w-fit h-fit hover:bg-[#008bdc] text-white rounded-lg' type='button' onClick={handleCertificateApply}>
           Apply for Certificate
         </button>
         ):null}
-        {applicationStatus === 'complete' && appliedForCertificateStatus === 'applied' ? (
+        {applicationStatus === 'complete' && !loadedFromURL && appliedForCertificateStatus === 'applied' ? (
         <div className='text-slate-500 font-medium p-2 capitalize'>
           {console.log(applicationStatus)}
             Application Status for Certificate: {appliedForCertificateStatus}
           </div>
         ):null}
-        {applicationStatus === 'complete' && appliedForCertificateStatus === 'download' ? (
+        {applicationStatus === 'complete' && !loadedFromURL && appliedForCertificateStatus === 'download' ? (
         <button className='btn bg-[#00a5ec] p-2 w-fit h-fit hover:bg-[#008bdc] text-white rounded-lg' type='submit' onClick={handleDownloadCertificate}>
         Download Certificate
         </button>
         ):null}
-        {!applicationStatus && (
+        {!applicationStatus && !loadedFromURL &&(
           <button className='btn bg-[#00a5ec] p-2 w-fit h-fit hover:bg-[#008bdc] text-white rounded-lg' type='submit' onClick={handleApplyClick}>
           Apply Now
           </button>

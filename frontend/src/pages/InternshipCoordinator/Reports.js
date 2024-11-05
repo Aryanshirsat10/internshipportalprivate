@@ -1,70 +1,190 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Popover, PopoverTrigger, PopoverContent } from "../../components/ui/popover"
 import { Button } from "../../components/ui/button"
 import { Calendar } from "../../components/ui/calendar"
 import InterncoSidebar from '../../components/InterncoSidebar'
 import TopInternCoSidebar from '../../components/TopInternCoSidebar'
 
-const Reports = () => {
+const columns = [
+  'Project Title',
+  'Mentor Name',
+  'Mentor Email',
+  'Name of Students',
+  'Branch',
+  'Class',
+  'Student Email',
+  'Mobile No',
+  'Status',
+  'Duration in hrs',
+  'Starting Date',
+  'Completion Date',
+  'Remark'
+];
+
+const Report = () => {
+  const [selectedColumns, setSelectedColumns] = useState([]);
+  const [startDate, setStartDate] = useState(null);
+  const [endDate, setEndDate] = useState(null);
+
+  // Handle selecting or deselecting all columns
+  const handleSelectAll = () => {
+    if (selectedColumns.length === columns.length) {
+      setSelectedColumns([]); // Deselect all
+    } else {
+      setSelectedColumns(columns); // Select all
+    }
+  };
+
+  // Handle individual column selection
+  const handleColumnSelection = (column) => {
+    if (selectedColumns.includes(column)) {
+      setSelectedColumns(selectedColumns.filter((col) => col !== column));
+    } else {
+      setSelectedColumns([...selectedColumns, column]);
+    }
+  };
+
+  const handleDownload = async () => {
+    try {
+      console.log(startDate,endDate,selectedColumns);
+      const response = await fetch('http://localhost:5000/api/download-report', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          startDate,
+          endDate,
+          selectedColumns
+        }),
+      });
+  
+      if (response.ok) {
+        const blob = await response.blob();
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'reports.xlsx';
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+      } else {
+        console.error('Failed to download report');
+      }
+    } catch (error) {
+      console.error('Error downloading report:', error);
+    }
+  };
+  
   return (
-    <div className='min-[990px]:flex w-full h-screen'>
-    <div className='min-[990px]:flex min-[990px]:flex-col bg-red-50 p-5 w-[20%] hidden'>
-      <InterncoSidebar/>
-    </div>
-    <div className='flex flex-col bg-red-50 h-fit min-[990px]:p-5 p-2 min-[990px]:hidden items-center'>
-    <h3 className='text-xl font-semibold'>Internship Portal</h3>
-    <div className='overflow-x-scroll w-screen pt-5'>
-      <TopInternCoSidebar/>
-    </div>
-    </div>
-    <div className='rounded-lg bg-slate-100 min-[990px]:w-[80%] p-5 overflow-y-auto h-full'>
-      {/* <h1 className="flex flex-col text-3xl font-bold items-start">Welcome back</h1> */}
-    <div className="container mx-auto max-w-xl px-4 py-12 sm:px-6 lg:px-8">
-      <div className="space-y-6">
-        <div>
-          <h1 className="text-3xl font-bold tracking-tight">Download Reports</h1>
-          <p className="mt-2 text-muted-foreground">Select a date range to download your reports.</p>
+    <div className="min-[990px]:flex w-full h-screen">
+      <div className="min-[990px]:flex min-[990px]:flex-col bg-red-50 p-5 w-[20%] hidden">
+        <InterncoSidebar />
+      </div>
+      <div className="flex flex-col bg-red-50 h-fit min-[990px]:p-5 p-2 min-[990px]:hidden items-center">
+        <h3 className="text-xl font-semibold">Internship Portal</h3>
+        <div className="overflow-x-scroll w-screen pt-5">
+          <TopInternCoSidebar />
         </div>
-        <div className="grid grid-cols-2 gap-4">
-          <div className="space-y-2">
-            <label htmlFor="start-date">Start Date</label>
-            <Popover>
-              <PopoverTrigger asChild>
-                <Button id="start-date" variant="outline" className="w-full justify-start font-normal">
-                  <CalendarDaysIcon className="mr-2 h-4 w-4" />
-                  <span>Select start date</span>
-                </Button>
-              </PopoverTrigger>
-              <PopoverContent className="w-auto p-0" align="start">
-                <Calendar mode="single" />
-              </PopoverContent>
-            </Popover>
+      </div>
+      <div className="rounded-lg bg-slate-100 min-[990px]:w-[80%] p-5 overflow-y-auto h-full">
+        <div className="container mx-auto max-w-xl px-4 py-12 sm:px-6 lg:px-8">
+          <div className="space-y-6">
+            <div>
+              <h1 className="text-3xl font-bold tracking-tight">Download Reports</h1>
+              <p className="mt-2 text-muted-foreground">Select a date range and columns to download your report.</p>
+            </div>
+
+            {/* Date Range Selection */}
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <label htmlFor="start-date">Start Date</label>
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <Button id="start-date" variant="outline" className="w-full justify-start font-normal">
+                      <CalendarDaysIcon className="mr-2 h-4 w-4" />
+                      <span>{startDate ? startDate.toLocaleDateString() : "Select start date"}</span>
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-auto p-0" align="start">
+                    <Calendar mode="single"  selected={startDate} onSelect={setStartDate}/>
+                  </PopoverContent>
+                </Popover>
+              </div>
+              <div className="space-y-2">
+                <label htmlFor="end-date">End Date</label>
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <Button id="end-date" variant="outline" className="w-full justify-start font-normal">
+                      <CalendarDaysIcon className="mr-2 h-4 w-4" />
+                      <span>{endDate ? endDate.toLocaleDateString() : "Select end date"}</span>
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-auto p-0" align="start">
+                    <Calendar mode="single" selected={endDate} onSelect={setEndDate}/>
+                  </PopoverContent>
+                </Popover>
+              </div>
+            </div>
+
+            {/* Column Selection Dropdown */}
+            <div>
+              <h2 className="text-xl font-semibold">Select Columns</h2>
+              <Popover>
+                <PopoverTrigger asChild>
+                  <Button variant="outline" className="w-full justify-start font-normal overflow-auto hide-scrollbar">
+                    <span>{selectedColumns.length >=1 ? selectedColumns.join(', ') :"Select columns"}</span>
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-64 p-2">
+                  <div className="flex items-center space-x-2">
+                    <input
+                      type="checkbox"
+                      id="select-all"
+                      checked={selectedColumns.length === columns.length}
+                      onChange={handleSelectAll}
+                    />
+                    <label htmlFor="select-all" className="text-sm">
+                      Select All
+                    </label>
+                  </div>
+                  <hr className="my-2" />
+                  <div className="max-h-48 overflow-y-auto">
+                    {columns.map((column, index) => (
+                      <div key={index} className="flex items-center space-x-2">
+                        <input
+                          type="checkbox"
+                          id={`column-${index}`}
+                          checked={selectedColumns.includes(column)}
+                          onChange={() => handleColumnSelection(column)}
+                        />
+                        <label htmlFor={`column-${index}`} className="text-sm">
+                          {column}
+                        </label>
+                      </div>
+                    ))}
+                  </div>
+                </PopoverContent>
+              </Popover>
+            </div>
+
+            {/* Download Button */}
+            <div className="flex justify-end">
+              <Button
+                className="w-full sm:w-auto bg-black text-white"
+                onClick={handleDownload}
+              >
+                Download
+              </Button>
+            </div>
           </div>
-          <div className="space-y-2">
-            <label htmlFor="end-date">End Date</label>
-            <Popover>
-              <PopoverTrigger asChild>
-                <Button id="end-date" variant="outline" className="w-full justify-start font-normal">
-                  <CalendarDaysIcon className="mr-2 h-4 w-4" />
-                  <span>Select end date</span>
-                </Button>
-              </PopoverTrigger>
-              <PopoverContent className="w-auto p-0" align="start">
-                <Calendar mode="single" />
-              </PopoverContent>
-            </Popover>
-          </div>
-        </div>
-        <div className="flex justify-end">
-          <Button className="w-full sm:w-auto bg-black text-white">Download</Button>
         </div>
       </div>
     </div>
-    </div>
-    </div>
-  )
+  );
+};
 
-}
+
 
 function CalendarDaysIcon(props) {
   return (
@@ -116,4 +236,4 @@ function XIcon(props) {
 }
 
 
-export default Reports
+export default Report

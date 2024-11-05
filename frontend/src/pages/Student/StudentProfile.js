@@ -23,6 +23,7 @@ const StudentProfile = () => {
         birthday: '',
         skills: [],
         resumeUrl:'',
+        profileUrl:'',
       };
     
     const [profile, setProfile] = useState(defaultProfile);
@@ -30,6 +31,38 @@ const StudentProfile = () => {
   const [resumeUrl, setResumeUrl] = useState("");
   const departments = ['Artificial Intelligence & Data Science', 'Computer Engineering', 'Computer & Communication Engineering', 'Computer Science & Business Systems', 'Electronics & Computer Engineering','Electronics & Telecommunication Engineering','Electronics Engineering (VLSI Design & Technology)',
 'Information Technology','Mechanical Engineering','Robotics & Artificial Intelligence'];
+    const [selectedImage, setSelectedImage] = useState(null);
+    const [profileImageUrl, setProfileImageUrl] = useState('');
+
+    const handleImageChange = async (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            setSelectedImage(file);
+            try {
+                const formData = new FormData();
+                formData.append("profilePhoto", file);
+                formData.append("upload_preset", "YOUR_UPLOAD_PRESET"); // replace with your Cloudinary upload preset
+                
+                const response = await fetch("http://localhost:5000/api/upload-profile-photo", {
+                    method: "POST",
+                    body: formData
+                });
+                console.log("gettingggggggggggg")
+                const data = await response.json();
+                console.log(data.imageUrl);
+                if (response.ok) {
+                    const updatedProfile = { ...profile, profileUrl: data.imageUrl }; // Ensure that the profileUrl is updated
+                    setProfile(updatedProfile); // Update profile state
+                    setProfileImageUrl(data.imageUrl); // Update profileImageUrl for immediate display
+                } else {
+                    console.error("Image upload failed:", data);
+                }
+            } catch (error) {
+                console.error("Image upload failed:", error);
+            }
+        }
+    };
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setProfile({ ...profile, [name]: value });
@@ -100,13 +133,15 @@ const StudentProfile = () => {
       
               // Merge fetched data with default profile values
               const mergedProfile = { ...defaultProfile, ...data, firstName, lastName };
-            //   console.log(mergedProfile.skills)
+              console.log(mergedProfile.profileUrl);
         setProfile(mergedProfile);
+        setProfileImageUrl(mergedProfile.profileUrl);
         } catch (error) {
             console.log(error);
         }
     }
     fetchInitialdetails();
+    console.log(profile.profileUrl);
   }, [])
   
   const handleSubmit = async (e) => {
@@ -134,6 +169,7 @@ const StudentProfile = () => {
   }
 
     try {
+        console.log(profile.profileUrl);
       const response = await fetch('http://localhost:5000/api/student/updateDetails', {
         method: 'PUT',
         headers: {
@@ -173,9 +209,15 @@ const StudentProfile = () => {
                         <div className="bg-white p-3 border-t-4 border-rose-400">
                             <div className="image overflow-hidden">
                                 <img className="h-auto w-full mx-auto"
-                                    src="https://via.placeholder.com/150"
+                                    src={profileImageUrl || "https://via.placeholder.com/150"}
                                     alt="Profile Pic" />
                             </div>
+                            <input
+                                type="file"
+                                accept="image/png, image/jpeg"
+                                onChange={handleImageChange}
+                                className="mt-3"
+                            />
                             <h1 className="text-gray-900 font-bold text-xl leading-8 my-1">{profile.name}</h1>
                             <input type="text" className="text-gray-600 font-lg text-semibold leading-6 border w-full py-2 pl-1"name='subTitle' onChange={handleInputChange} placeholder='Short Description' value={profile?.subTitle}/>
                             <h4 className="px-1 pt-2 font-semibold">Bio</h4>

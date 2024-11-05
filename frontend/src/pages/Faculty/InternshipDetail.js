@@ -7,9 +7,20 @@ import StudentModal from '../../components/StudentModal';
 
 const InternshipDetail = () => {
   const location = useLocation();
-  const { internship } = location.state || {};
+  const [internship, setInternship] = useState({
+    title: '',
+    company: '',
+    location: '',
+    startDate: '',
+    endDate: '',
+    applicationDeadline: '',
+    skillsRequired: [],
+    currentApplicants: 0,
+    description: '',
+    eligibilityCriteria: '',
+  });
   const [facultyId , setFacultyId] = useState('');
-  const { startDate, endDate, applicationDeadline, skillsRequired } = internship;
+  const { startDate, endDate, applicationDeadline, skillsRequired,title,eligibilityCriteria,description } = internship;
   const [students, setStudents] = useState([]);
   const [studentsworking, setStudentsworking] = useState([]);
   const [isOpen, setIsOpen] = useState(true);
@@ -19,6 +30,7 @@ const InternshipDetail = () => {
   const [status, setStatus] = useState('');
   const [credits, setCredits] = useState(0);
   const [hours, setHours] = useState(0);
+  const queryParams = new URLSearchParams(location.search);
   const handleStatusChange = (event) => {
     setStatus(event.target.value);
   };
@@ -348,11 +360,14 @@ const InternshipDetail = () => {
     const baseUrl = window.location.origin + window.location.pathname;
     const internshipId = uuidv4();
     const queryParams = new URLSearchParams({
+      title,
       startDate,
       endDate,
+      eligibilityCriteria,
       applicationDeadline,
       skillsRequired: JSON.stringify(skillsRequired),
       internshipId,
+      description,
     }).toString();
     return `${baseUrl}?${queryParams}`;
   };
@@ -371,6 +386,27 @@ const InternshipDetail = () => {
     // Return the duration string
     return `${totalMonths} ${totalMonths === 1 ? 'month' : 'months'}`;
   };
+  useEffect(() => {
+    // Check if location.state contains internship details
+    if (location.state && location.state.internship) {
+      setInternship(location.state.internship);
+    } else {
+      // Fallback to query parameters if state is not available
+      setInternship({
+        title: queryParams.get('title') || '',
+        company: queryParams.get('company') || '',
+        location: queryParams.get('location') || '',
+        startDate: queryParams.get('startDate') || '',
+        endDate: queryParams.get('endDate') || '',
+        applicationDeadline: queryParams.get('applicationDeadline') || '',
+        skillsRequired: JSON.parse(queryParams.get('skillsRequired')) || [],
+        internshipId: queryParams.get('internshipId') || uuidv4(),
+        currentApplicants: parseInt(queryParams.get('currentApplicants')) || 0,
+        description: queryParams.get('description') || '',
+        eligibilityCriteria: queryParams.get('eligibilityCriteria') || '',
+      });
+    }
+  }, [location.state, queryParams, ]);
 
   const duration = calculateDuration(internship.startDate, internship.endDate);
 

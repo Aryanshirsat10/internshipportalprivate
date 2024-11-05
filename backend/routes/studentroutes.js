@@ -7,6 +7,9 @@ const jwt = require("jsonwebtoken");
 const auth = require("../middleware/auth");
 const Internships = require("../models/Internship");
 const uuid = require("uuid");
+const multer = require('multer');
+const cloudinary = require('../cloudinaryConfig');
+const fs = require('fs');
 
 
 //signup
@@ -161,16 +164,39 @@ router.get('/student/applyforcertificate', auth, async (req, res) => {
   }
 });
 
+const upload = multer({ dest: 'uploads/' }); // Temporary storage for uploaded files
 
+router.post('/upload-profile-photo', upload.single('profilePhoto'), async (req, res) => {
+  if (!req.file) {
+    console.log('No file uploaded.');
+    return res.status(400).json({ error: 'No file uploaded' });
+  }
+  try {
+    const result = await cloudinary.uploader.upload(req.file.path, {
+      folder: 'profile_photos', // Optional: specify a folder in Cloudinary
+    });
+    console.log(result.secure_url);
+    fs.unlink(req.file.path, (err) => {
+      if (err) {
+        console.error('Failed to delete temporary file:', err);
+      } else {
+        console.log('Temporary file deleted successfully');
+      }
+    });
+    res.json({ imageUrl: result.secure_url });
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to upload image' });
+  }
+});
 router.put('/student/updateDetails', auth, async (req, res) => {
   try {
     const studentId = req.user.userId; // Assuming userId is stored in req.user
     const {
       gender, phone, yearOfStudy, cgpa, skills: newSkills,
       subTitle, bio, resumeUrl, education: newEducation,
-      internshipApplications: newInternshipApplications
+      internshipApplications: newInternshipApplications,profileUrl
     } = req.body;
-
+    console.log('reusme url' , req.body.resumeUrl);
     // Fetch the student by ID
     const student = await Student.findById(studentId);
 
@@ -186,6 +212,7 @@ router.put('/student/updateDetails', auth, async (req, res) => {
     if (subTitle) student.subTitle = subTitle;
     if (bio) student.bio = bio;
     if (resumeUrl) student.resumeUrl = resumeUrl;
+    if (profileUrl) student.profileUrl = profileUrl;
 
     // Update skills array
     if (newSkills && newSkills.length > 0) {
