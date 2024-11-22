@@ -67,7 +67,7 @@ const ApplicationDetail = () => {
   useEffect(()=>{
     const fetchFaculty = async(facultyid)=>{
       // console.log(facultyid)
-      const response = await fetch(`http://localhost:5000/api/getfacutly/${facultyid}`, {
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/getfacutly/${facultyid}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -94,7 +94,7 @@ const ApplicationDetail = () => {
     const { startDate, endDate, title } = internship;
     const facultyName = faculty?.name;
     try {
-      const response = await fetch('http://localhost:5000/api/generate-certificate', {
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/generate-certificate`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

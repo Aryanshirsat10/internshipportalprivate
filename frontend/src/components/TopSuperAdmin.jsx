@@ -13,7 +13,7 @@ const TopSuperAdminSidebar = () => {
 
   async function logout() {
     const response = fetch(
-      `http://localhost:5000/api/students/logout`,
+      `${process.env.REACT_APP_API_URL}/students/logout`,
       {
         method: "GET",
         headers: {

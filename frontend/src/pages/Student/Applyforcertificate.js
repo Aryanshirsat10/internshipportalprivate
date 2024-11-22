@@ -25,7 +25,7 @@ const Applyforcertificate = () => {
   const [isLoading, setIsLoading] = useState(true);
   const fetchInternships = async () => {
     try {
-      const response = await fetch('http://localhost:5000/api/student/applyforcertificate', {
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/student/applyforcertificate`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',

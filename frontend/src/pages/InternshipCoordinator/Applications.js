@@ -10,7 +10,7 @@ const Applications = () => {
     const fetchApplications = async () => {
       try {
         // Fetch all applications
-        const response = await fetch('http://localhost:5000/api/getapplications', {
+        const response = await fetch(`${process.env.REACT_APP_API_URL}/getapplications`, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
@@ -23,7 +23,7 @@ const Applications = () => {
         // Fetch details for each application
         const detailedApplications = await Promise.all(applicationsData.map(async (application) => {
           // Fetch internship details
-          const internshipResponse = await fetch(`http://localhost:5000/api/getsingleinternship`, {
+          const internshipResponse = await fetch(`${process.env.REACT_APP_API_URL}/getsingleinternship`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
@@ -35,7 +35,7 @@ const Applications = () => {
           const internshipData = await internshipResponse.json();
 
           // Fetch student details
-          const studentResponse = await fetch(`http://localhost:5000/api/faculty/getstudent`, {
+          const studentResponse = await fetch(`${process.env.REACT_APP_API_URL}/faculty/getstudent`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',

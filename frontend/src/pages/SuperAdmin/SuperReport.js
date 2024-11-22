@@ -47,7 +47,7 @@ const SuperReports = () => {
   const handleDownload = async () => {
     try {
       console.log(startDate,endDate,selectedColumns);
-      const response = await fetch('http://localhost:5000/api/download-report', {
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/download-report`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

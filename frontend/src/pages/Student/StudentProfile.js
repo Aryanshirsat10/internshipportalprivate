@@ -43,7 +43,7 @@ const StudentProfile = () => {
                 formData.append("profilePhoto", file);
                 formData.append("upload_preset", "YOUR_UPLOAD_PRESET"); // replace with your Cloudinary upload preset
                 
-                const response = await fetch("http://localhost:5000/api/upload-profile-photo", {
+                const response = await fetch("${process.env.REACT_APP_API_URL}/upload-profile-photo", {
                     method: "POST",
                     body: formData
                 });
@@ -116,7 +116,7 @@ const StudentProfile = () => {
   useEffect(() => {
     const fetchInitialdetails = async()=>{
         try {
-            const response = await fetch('http://localhost:5000/api/students/me', {
+            const response = await fetch(`${process.env.REACT_APP_API_URL}/students/me`, {
                 method: 'GET',
                 headers: {
                   'Content-Type': 'application/json',
@@ -170,7 +170,7 @@ const StudentProfile = () => {
 
     try {
         console.log(profile.profileUrl);
-      const response = await fetch('http://localhost:5000/api/student/updateDetails', {
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/student/updateDetails`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

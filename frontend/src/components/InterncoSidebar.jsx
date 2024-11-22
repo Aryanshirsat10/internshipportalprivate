@@ -12,7 +12,7 @@ const InterncoSidebar = () => {
 
   async function logout() {
     const response = fetch(
-      `http://localhost:5000/api/faculty/logout`,
+      `${process.env.REACT_APP_API_URL}/faculty/logout`,
       {
         method: "GET",
         headers: {

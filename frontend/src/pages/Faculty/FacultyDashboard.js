@@ -32,7 +32,7 @@ const FacultyDashboard = () => {
     // Fetch existing data from the database when the component mounts
     const fetchExistingData = async () => {
       try {
-        const response = await fetch('http://localhost:5000/api/getInternship', {
+        const response = await fetch(`${process.env.REACT_APP_API_URL}/getInternship`, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
@@ -51,7 +51,7 @@ const FacultyDashboard = () => {
 useEffect(()=>{
 const fetchfacultydetails=async()=>{
   try {
-    const response = await fetch('http://localhost:5000/api/faculty/me', {
+    const response = await fetch(`${process.env.REACT_APP_API_URL}/faculty/me`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',

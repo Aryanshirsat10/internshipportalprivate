@@ -181,7 +181,7 @@ const SuperAdminDashboard = () => {
     // Fetch existing data from the database when the component mounts
     const fetchExistingData = async () => {
       try {
-        const response = await fetch('http://localhost:5000/api/getInternship', {
+        const response = await fetch(`${process.env.REACT_APP_API_URL}/getInternship`, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',

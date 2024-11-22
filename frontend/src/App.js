@@ -29,7 +29,7 @@ function App() {
   // );
   // const [loginStatus, setLoginStatus] = useState(false);
   // const [checkLoginURL, setCheckLoginURL] = useState();
-  // setCheckLoginURL(`http://localhost:5000/api/students/me`);
+  // setCheckLoginURL(`${process.env.REACT_APP_API_URL}/students/me`);
   // const checkLog = async () => {
   //   const response = await fetch(checkLoginURL, {
   //     method: "GET",

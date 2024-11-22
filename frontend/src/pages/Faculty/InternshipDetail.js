@@ -44,7 +44,7 @@ const InternshipDetail = () => {
   };
   const handleUpdate = async(studentId)=>{
     try {
-    const response  = await fetch(`http://localhost:5000/api/internships/${internship._id}/students/${studentId}`,{
+    const response  = await fetch(`${process.env.REACT_APP_API_URL}/internships/${internship._id}/students/${studentId}`,{
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
@@ -66,7 +66,7 @@ const InternshipDetail = () => {
     const data = await response.json();
     console.log('Updated internship status:', data);
 
-    const response3 = await fetch(`http://localhost:5000/api/faculty/updateApplicationStatus/${studentId}`, {
+    const response3 = await fetch(`${process.env.REACT_APP_API_URL}/faculty/updateApplicationStatus/${studentId}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
@@ -103,7 +103,7 @@ const InternshipDetail = () => {
 
   const fetchStudents = async () => {
     try {
-      const response = await fetch(`http://localhost:5000/api/internships/getStudents/${internship._id}`, {
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/internships/getStudents/${internship._id}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -129,7 +129,7 @@ const InternshipDetail = () => {
 
   const fetchworkingStudents = async () => {
     try {
-      const response = await fetch(`http://localhost:5000/api/internships/getworkingStudents/${internship._id}`, {
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/internships/getworkingStudents/${internship._id}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -154,7 +154,7 @@ const InternshipDetail = () => {
 
   const fetchStudentById = async (studentId) => {
     try {
-      const response = await fetch('http://localhost:5000/api/faculty/getStudent', {
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/faculty/getStudent`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -194,7 +194,7 @@ const InternshipDetail = () => {
   const handleAccept = async (studentId) => {
     try {
       // Update studentsworking field first
-      const response1 = await fetch(`http://localhost:5000/api/internships/updateStudentsWorking/${internship._id}`, {
+      const response1 = await fetch(`${process.env.REACT_APP_API_URL}/internships/updateStudentsWorking/${internship._id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -220,7 +220,7 @@ const InternshipDetail = () => {
       // Update currentApplicants field second
       const updatedCurrentApplicants = internship.currentApplicants.filter(id => id !== studentId); // Remove studentId from currentApplicants
   
-      const response2 = await fetch(`http://localhost:5000/api/internships/updateCurrentApplicants/${internship._id}`, {
+      const response2 = await fetch(`${process.env.REACT_APP_API_URL}/internships/updateCurrentApplicants/${internship._id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -233,7 +233,7 @@ const InternshipDetail = () => {
       const data2 = await response2.json();
       console.log('Updated current applicants:', data2);
       
-      const response3 = await fetch(`http://localhost:5000/api/faculty/updateApplicationStatus/${studentId}`, {
+      const response3 = await fetch(`${process.env.REACT_APP_API_URL}/faculty/updateApplicationStatus/${studentId}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -269,7 +269,7 @@ const InternshipDetail = () => {
     try {
       // Update currentApplicants field second
       const updatedCurrentApplicants = internship.currentApplicants.filter(id => id !== studentId); // Remove studentId from currentApplicants
-      const response2 = await fetch(`http://localhost:5000/api/internships/updateCurrentApplicants/${internship._id}`, {
+      const response2 = await fetch(`${process.env.REACT_APP_API_URL}/internships/updateCurrentApplicants/${internship._id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -282,7 +282,7 @@ const InternshipDetail = () => {
       const data2 = await response2.json();
       console.log('Updated current applicants:', data2);
 
-      const response3 = await fetch(`http://localhost:5000/api/faculty/updateApplicationStatus/${studentId}`, {
+      const response3 = await fetch(`${process.env.REACT_APP_API_URL}/faculty/updateApplicationStatus/${studentId}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -330,7 +330,7 @@ const InternshipDetail = () => {
   };
   const fetchfacultyId = async () => {
     try {
-      const response = await fetch('http://localhost:5000/api/faculty/me', {
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/faculty/me`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',

@@ -89,7 +89,7 @@ const ManageUsers = () => {
   const handleSaveUser = async() => {
     if (editingUser) {
       try {
-        const response = await fetch(`http://localhost:5000/api/edituser/${editingUser.userId}`, {
+        const response = await fetch(`${process.env.REACT_APP_API_URL}/edituser/${editingUser.userId}`, {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json',
@@ -117,7 +117,7 @@ const ManageUsers = () => {
       }
     } else {
       try {
-        const response = await fetch('http://localhost:5000/api/adduser', {
+        const response = await fetch(`${process.env.REACT_APP_API_URL}/adduser`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -151,7 +151,7 @@ const ManageUsers = () => {
   const handleDeactivateUser = async (user) => {
     try {
       const updatedUser = { ...user, status: user.status === "Active" ? "Inactive" : "Active" };
-      const response = await fetch(`http://localhost:5000/api/users/${user.userId}`, {
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/users/${user.userId}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -215,7 +215,7 @@ const ManageUsers = () => {
     // Fetch existing data from the database when the component mounts
     const fetchExistingData = async () => {
       try {
-        const response = await fetch('http://localhost:5000/api/getusers', {
+        const response = await fetch(`${process.env.REACT_APP_API_URL}/getusers`, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',

@@ -102,7 +102,7 @@ const InternshipDetail = () => {
   };
   const handleDownloadCertificate = async()=>{
     try {
-      const certificate = await fetch('http://localhost:5000/api/downloadcertificate',{
+      const certificate = await fetch(`${process.env.REACT_APP_API_URL}/downloadcertificate`,{
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -144,7 +144,7 @@ const InternshipDetail = () => {
   }
   const handleApply = async () => {
     try {
-      const studentResponse = await fetch('http://localhost:5000/api/students/me', {
+      const studentResponse = await fetch(`${process.env.REACT_APP_API_URL}/students/me`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -161,7 +161,7 @@ const InternshipDetail = () => {
       const student = await studentResponse.json();
       // Update student's internshipApplications status to 'applied'
       // console.log('started put');
-      const updatedStudent = await fetch(`http://localhost:5000/api/students/updateInternshipStatus`, {
+      const updatedStudent = await fetch(`${process.env.REACT_APP_API_URL}/students/updateInternshipStatus`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -180,7 +180,7 @@ const InternshipDetail = () => {
       }
 
       // Update the internship's current applicants list
-      const response = await fetch(`http://localhost:5000/api/updateCurrentApplicants/${internship._id}`, {
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/updateCurrentApplicants/${internship._id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -208,7 +208,7 @@ const InternshipDetail = () => {
 
   const handleCertificateApply = async () => {
     try {
-      const response = await fetch('http://localhost:5000/api/student/applyForCertificate', {
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/student/applyForCertificate`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -236,7 +236,7 @@ const InternshipDetail = () => {
     const fetchStudentDetails = async () => {
       if (!internship._id) return;
       try {
-        const studentResponse = await fetch('http://localhost:5000/api/students/me', {
+        const studentResponse = await fetch(`${process.env.REACT_APP_API_URL}/students/me`, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
@@ -265,7 +265,7 @@ const InternshipDetail = () => {
     const fetchApplicationdetails = async () => {
       if (!internship._id) return;
       try {
-        const applicationResponse = await fetch(`http://localhost:5000/api/student/applyForCertificatestatus/${internship._id}`, {
+        const applicationResponse = await fetch(`${process.env.REACT_APP_API_URL}/student/applyForCertificatestatus/${internship._id}`, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
