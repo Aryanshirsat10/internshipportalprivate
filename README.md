@@ -61,5 +61,5 @@ Access the Application
 Frontend: Open http://localhost:3000 in your browser.
 Backend: The backend will run on http://localhost:5000 or a port specified in your backend .env file.
 
-# Ensure MongoDB is running locally or use a connection string in the backend .env file as MONGODB_URI to connect to a remote MongoDB instance.
-# If you change the backend port, update the frontend .env file to point to the correct backend REACT_APP_API_URL.
+### Ensure MongoDB is running locally or use a connection string in the backend .env file as MONGODB_URI to connect to a remote MongoDB instance.
+### If you change the backend port, update the frontend .env file to point to the correct backend REACT_APP_API_URL.
