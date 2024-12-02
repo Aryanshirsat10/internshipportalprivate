@@ -48,11 +48,11 @@ const Sidebar = () => {
 
           </button>
         </NavLink>
-        <NavLink to="/Student/settings" className={`link hover:bg-red-300 w-full rounded-lg p-2 ${activeLink ? 'active' : ''}`} onClick={() => handleLinkClick(0)}>
+        {/* <NavLink to="/Student/settings" className={`link hover:bg-red-300 w-full rounded-lg p-2 ${activeLink ? 'active' : ''}`} onClick={() => handleLinkClick(0)}>
           <button className='flex flex-row gap-2'>
           {activeLink ? <IoSettings style={{fontSize: 22}}/> : <IoSettingsOutline style={{fontSize: 22}}/>}Settings
           </button>
-        </NavLink>
+        </NavLink> */}
       </div>
       <div className='flex flex-col absolute bottom-3 left-7'>
       <NavLink to="/student/profile" className={`link hover:bg-red-300 w-full rounded-lg p-2 ${activeLink ? 'active' : ''}`} onClick={() => handleLinkClick(0)}>
