@@ -95,7 +95,7 @@ fetchfacultydetails();
       </div>
       </div>
       <div className='rounded-lg bg-slate-100 min-[990px]:w-[80%] p-5 overflow-y-auto h-full'>
-        <h1 className="flex flex-col text-3xl font-bold items-start">Welcome back {facultyname}</h1>
+        <h1 className="flex flex-col text-3xl font-bold items-start">Welcome back Prof. {facultyname}</h1>
         <div>
         <div className='flex flex-row pt-5 justify-between lg:w-[95%] w-[95%]'>
           <h2 className='text-xl font-semibold text-slate-600'>
