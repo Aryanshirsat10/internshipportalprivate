@@ -3,6 +3,7 @@ import { useState } from 'react'
 import Cookies from "js-cookie";
 import Checkbox from "../components/ui/Checkbox";
 import Modal from '../components/ui/Modal';
+import { toast } from 'react-toastify';
 // import { NavLink } from 'react-router-dom';
 const Login = () => {
   const [emailId ,setEmailId] = useState('');
@@ -49,9 +50,11 @@ const Login = () => {
         else{
           const error = await response.json();
           console.error(error.message);
+          toast.error("Incorrect username or password. Please try again."); 
         }
       } catch (error) {
         console.log(error);
+        toast.error("An unexpected error occurred. Please try again later.");
       }
     };
 
@@ -64,7 +67,11 @@ const Login = () => {
       else if(selectedRole === 'Internship Coordinator'){
         window.location.href = "/InternshipCoordinator";
       }
+      else if(selectedRole === 'Super Admin'){
+        window.location.href = "/SuperAdmin";
+      }
       else {
+        toast.error("Unknown User role");
         console.error('Unknown role:', selectedRole);
       }
     };

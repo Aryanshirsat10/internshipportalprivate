@@ -110,6 +110,7 @@ const ManageUsers = () => {
           handleCloseModal();
           toast.success('User updated successfully!');
         } else {
+          toast.error('Failed to update user');
           console.error('Error updating user:', data.message);
         }
       } catch (error) {
