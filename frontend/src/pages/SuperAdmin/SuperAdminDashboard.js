@@ -126,11 +126,11 @@ const chartConfig1 = {
     label: "Page Views",
   },
   semester_long: {
-    label: "semester_long",
+    label: "Semester Long",
     color: "hsl(var(--chart-1))",
   },
   normal: {
-    label: "normal",
+    label: "Normal",
     color: "hsl(var(--chart-2))",
   },
 }

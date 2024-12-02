@@ -4,6 +4,7 @@ import { useLocation } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
 import Cookies from "js-cookie";
 import StudentModal from '../../components/StudentModal';
+import { toast } from 'react-toastify';
 
 const InternshipDetail = () => {
   const location = useLocation();
@@ -26,83 +27,118 @@ const InternshipDetail = () => {
   const [isOpen, setIsOpen] = useState(true);
   const [acceptedStudents, setAcceptedStudents] = useState([]);
   const [selectedStudent, setSelectedStudent] = useState(null);
+  const [studentData, setStudentData] = useState({});
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [status, setStatus] = useState('');
   const [credits, setCredits] = useState(0);
   const [hours, setHours] = useState(0);
   const queryParams = new URLSearchParams(location.search);
-  const handleStatusChange = (event) => {
-    setStatus(event.target.value);
-  };
-
-  const handleCreditsChange = (event) => {
-    setCredits(event.target.value);
-  };
-
-  const handleHoursChange = (event) => {
-    setHours(event.target.value);
-  };
-  const handleUpdate = async(studentId)=>{
-    try {
-    const response  = await fetch(`${process.env.REACT_APP_API_URL}/internships/${internship._id}/students/${studentId}`,{
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-auth-token': Cookies.get('token'),
-        'x-session-id': Cookies.get('sessionId')
+  const handleStatusChange = (studentId, event) => {
+    const newStatus = event.target.value;
+    setStudentData((prevData) => ({
+      ...prevData,
+      [studentId]: {
+        ...prevData[studentId],
+        status: newStatus,
       },
-      body: JSON.stringify({
-        status: status, 
-        credits:credits,
-        noofhours:hours
-      }),
-    })
-    
-    // if (!response.ok) {
-    //   const errorData = await response.json();
-    //   throw new Error(errorData.message || 'Failed to update application status');
-    // }
-
-    const data = await response.json();
-    console.log('Updated internship status:', data);
-
-    const response3 = await fetch(`${process.env.REACT_APP_API_URL}/faculty/updateApplicationStatus/${studentId}`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-auth-token': Cookies.get('token'),
-        'x-session-id': Cookies.get('sessionId')
+    }));
+  };
+  
+  const handleCreditsChange = (studentId, event) => {
+    const newCredits = event.target.value;
+    setStudentData((prevData) => ({
+      ...prevData,
+      [studentId]: {
+        ...prevData[studentId],
+        credits: newCredits,
       },
-      body: JSON.stringify({
-        internshipId: internship._id,
-        status: status
-      }),
-    });
-
-    if (!response3.ok) {
-      const errorData = await response3.json();
-      throw new Error(errorData.message || 'Failed to update application status');
+    }));
+  };
+  
+  const handleHoursChange = (studentId, event) => {
+    const newHours = event.target.value;
+    setStudentData((prevData) => ({
+      ...prevData,
+      [studentId]: {
+        ...prevData[studentId],
+        noofhours: newHours,
+      },
+    }));
+  };
+  
+  const handleUpdate = async (studentId) => {
+    const student = studentData[studentId];
+  
+    if (!student) {
+      console.error('Student data not found');
+      return;
     }
-
-    const data3 = await response3.json();
-    console.log('Updated application status:', data3);
-
-      setStatus('');
-      setCredits(0);
-      setHours(0);
+  
+    try {
+      // Update the internship data with the current student's data
+      const response = await fetch(
+        `${process.env.REACT_APP_API_URL}/internships/${internship._id}/students/${studentId}`,
+        {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            'x-auth-token': Cookies.get('token'),
+            'x-session-id': Cookies.get('sessionId'),
+          },
+          body: JSON.stringify({
+            status: student.status,
+            credits: student.credits,
+            noofhours: student.noofhours,
+          }),
+        }
+      );
+  
+      const data = await response.json();
+      console.log('Updated internship status:', data);
+  
+      const response3 = await fetch(
+        `${process.env.REACT_APP_API_URL}/faculty/updateApplicationStatus/${studentId}`,
+        {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            'x-auth-token': Cookies.get('token'),
+            'x-session-id': Cookies.get('sessionId'),
+          },
+          body: JSON.stringify({
+            internshipId: internship._id,
+            status: student.status,
+          }),
+        }
+      );
+  
+      const data3 = await response3.json();
+      console.log('Updated application status:', data3);
+      toast.success("Student Internship Details updated successfully"); 
+      // Clear the input fields after update (if needed)
+      // setStudentData((prevData) => ({
+      //   ...prevData,
+      //   [studentId]: {
+      //     ...prevData[studentId],
+      //     status: '',
+      //     credits: 0,
+      //     noofhours: 0,
+      //   },
+      // }));
     } catch (error) {
       console.error('Error updating status:', error);
     }
-  }
+  };
   useEffect(() => {
     fetchfacultyId();
     fetchStudents();
     fetchworkingStudents();
     console.log(studentsworking);
-  }, []);
+  }, [internship]);
 
   const fetchStudents = async () => {
     try {
+      console.log("bhellllllll",internship);
       const response = await fetch(`${process.env.REACT_APP_API_URL}/internships/getStudents/${internship._id}`, {
         method: 'GET',
         headers: {
@@ -143,7 +179,14 @@ const InternshipDetail = () => {
         // Map through each student ID and fetch their details
         const studentDetailsPromises = data.map(student => fetchStudentById(student.studentId));
         const studentsDetails = await Promise.all(studentDetailsPromises);
-        setStudentsworking(studentsDetails);
+        const studentsWithDetails = studentsDetails.map((student, index) => ({
+          ...student, 
+          credits: data[index].credits, 
+          status: data[index].status, 
+          noofhours: data[index].noofhours
+        }));
+        console.log(studentsWithDetails);
+        setStudentsworking(studentsWithDetails);
       } else {
         setStudentsworking([]); // No students found, set empty array
       }
@@ -500,7 +543,8 @@ const InternshipDetail = () => {
                   </div>
                   <div className='flex flex-col'>
                     <label className='font-semibold'>Status</label>
-                    <select value={status} onChange={handleStatusChange} className='p-2 rounded-md border'>
+                    <select value={studentData[student._id]?.status || student.status || ''}
+                      onChange={(event) => handleStatusChange(student._id, event)} className='p-2 rounded-md border'>
                       <option value=''>Select status</option>
                       <option value='complete'>Complete</option>
                       <option value='incomplete'>Incomplete</option>
@@ -512,8 +556,8 @@ const InternshipDetail = () => {
                     <label className='font-semibold'>Credits</label>
                     <input
                       type='number'
-                      value={credits}
-                      onChange={handleCreditsChange}
+                      value={studentData[student._id]?.credits || student.credits || ''}
+                      onChange={(event) => handleCreditsChange(student._id, event)}
                       className='p-2 rounded-md border'
                       placeholder='No. of credits'
                     />
@@ -523,8 +567,8 @@ const InternshipDetail = () => {
                     <label className='font-semibold'>Hours</label>
                     <input
                       type='number'
-                      value={hours}
-                      onChange={handleHoursChange}
+                      value={studentData[student._id]?.noofhours || student.noofhours || ''}
+                      onChange={(event) => handleHoursChange(student._id, event)}
                       className='p-2 rounded-md border'
                       placeholder='No. of hours'
                     />

@@ -19,7 +19,21 @@ const StudentModal = ({ student, isOpen, onClose }) => {
                 <h3 className="text-lg leading-6 font-medium text-gray-900">{student?.name}</h3>
                 <div className="mt-2">
                   <p className="text-sm text-gray-500">Email: {student.email}</p>
-                  <p className="text-sm text-gray-500">Year of Study: {student?.yearOfStudy}</p>
+                  <p className="text-sm text-gray-500">
+                    Resume URL:{" "}
+                    {student?.resumeUrl ? (
+                      <a
+                        href={student.resumeUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-blue-600 hover:underline"
+                      >
+                        {student.resumeUrl}
+                      </a>
+                    ) : (
+                      "Not available"
+                    )}
+                  </p>
                   <p className="text-sm text-gray-500">Department: {student?.department}</p>
                 </div>
               </div>

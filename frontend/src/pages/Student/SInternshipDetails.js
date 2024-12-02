@@ -220,14 +220,15 @@ const InternshipDetail = () => {
 
       if (response.ok) {
         const data = await response.json();
-        alert('Certificate application successful!');
+        toast.success('Certificate application successful!');
+        window.location.reload();
       } else {
         const error = await response.json();
         alert(`Failed to apply for certificate: ${error.message}`);
       }
     } catch (error) {
       console.error('Error applying for certificate:', error);
-      alert('An error occurred while applying for the certificate. Please try again.');
+      toast.error('An error occurred while applying for the certificate. Please try again.');
     }
   };
 
@@ -386,7 +387,6 @@ const InternshipDetail = () => {
       <Modal
         show={showModal}
         handleClose={handleCloseModal}
-        handleUpload={handleUpload}
         handleApply={handleApply}
       />
     </div>
