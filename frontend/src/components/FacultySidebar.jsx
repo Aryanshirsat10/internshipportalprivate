@@ -29,7 +29,7 @@ const FacultySidebar = () => {
 
   return (
     <div className='flex flex-col w-full h-full gap-10 place-items-center'>
-      <h3 className='text-xl font-semibold'>Internship Portal</h3>
+      <h3 className='text-xl font-semibold'>SwDC Portal</h3>
       <div className='flex flex-col gap-6 text-justify font-semibold w-full'>
         <NavLink to="/Faculty" className={`link hover:bg-red-300 w-full rounded-lg p-2 ${activeLink ? 'active' : ''}`} onClick={() => handleLinkClick(0)}>
           <button className='flex flex-row gap-2'>
