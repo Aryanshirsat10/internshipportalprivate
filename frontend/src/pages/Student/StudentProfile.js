@@ -43,7 +43,7 @@ const StudentProfile = () => {
                 formData.append("profilePhoto", file);
                 formData.append("upload_preset", "YOUR_UPLOAD_PRESET"); // replace with your Cloudinary upload preset
                 
-                const response = await fetch("${process.env.REACT_APP_API_URL}/upload-profile-photo", {
+                const response = await fetch(`${process.env.REACT_APP_API_URL}/upload-profile-photo`, {
                     method: "POST",
                     body: formData
                 });
